@@ -1,6 +1,10 @@
 {
     "projects":[
-        "src",
+        "src/Infrastructure",
+        "src/Client",
+        "src/Domain",
+        "src/AgentService",
+        "src/Presentation",
         "test"
     ]
 }

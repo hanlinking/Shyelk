@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\src\\Shyelk.Web\\bin\\Debug\\netcoreapp1.0\\Shyelk.Web.dll",
+            "program": "${workspaceRoot}\\src\\Client\\Shyelk.WebSite\\bin\\Debug\\netcoreapp1.1\\Shyelk.WebSite.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/src/Client/Shyelk.WebSite",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
@@ -29,7 +29,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/Views"
+                "/Views": "${workspaceRoot}/src/Client/Shyelk.WebSite/Views"
             }
         },
         {

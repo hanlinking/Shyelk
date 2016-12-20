@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}\\src\\Shyelk.Web\\project.json"
+                "${workspaceRoot}\\src\\Client\\Shyelk.WebSite\\project.json"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
