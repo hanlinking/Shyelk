@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using Shyelk.Infrastructure.Core.Caching.Redis;
 using StackExchange.Redis;
 
-namespace Shyelk.Infrastructure.Caching.Redis
+namespace Shyelk.Infrastructure.Core.Caching.Redis
 {
-    public class RedisCache : IDistributedCache, IDisposable
+    public class RedisCache : IDistributedCache
     {
         // KEYS[1] = = key
         // ARGV[1] = absolute-expiration - ticks as long (-1 for none)
@@ -28,7 +27,7 @@ namespace Shyelk.Infrastructure.Caching.Redis
         private const string DataKey = "data";
         private const long NotPresent = -1;
 
-        private ConnectionMultiplexer _connection;
+        private static ConnectionMultiplexer _connection;
         private IDatabase _cache;
 
         private readonly RedisCacheOptions _options;
@@ -157,18 +156,36 @@ namespace Shyelk.Infrastructure.Caching.Redis
         {
             if (_connection == null)
             {
-                _connection = ConnectionMultiplexer.Connect(_options.Configuration);
-                _cache = _connection.GetDatabase();
+                try
+                {
+                   _connection = ConnectionMultiplexer.Connect(_options.Configuration);
+                   if (!_connection.IsConnected)
+                   {
+                       throw new Exception("Connect fail");
+                   }
+                }
+                catch (RedisConnectionException ex)
+                {                    
+                    throw ex;
+                }                                            
             }
+            _cache = _connection.GetDatabase();
         }
 
         private async Task ConnectAsync()
         {
             if (_connection == null)
             {
-                _connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
-                _cache = _connection.GetDatabase();
+                try
+                {
+                   _connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration); 
+                }
+                catch (RedisConnectionException ex)
+                {                    
+                    throw ex;
+                }                                 
             }
+            _cache = _connection.GetDatabase();
         }
 
         private byte[] GetAndRefresh(string key, bool getData)
@@ -378,14 +395,6 @@ namespace Shyelk.Infrastructure.Caching.Redis
             }
 
             return absoluteExpiration;
-        }
-
-        public void Dispose()
-        {
-            if (_connection != null)
-            {
-                _connection.Close();
-            }
         }
     }
 }

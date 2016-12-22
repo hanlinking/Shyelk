@@ -25,6 +25,10 @@
     "Shyelk.Infrastructure.Core":{
       "version":"1.0.0-*",
       "target":"project"
+    },
+    "Shyelk.Infrastructure.Core.Caching.Redis":{
+      "version": "1.0.0-*",
+      "target": "project"
     }
   },
 

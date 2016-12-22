@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shyelk.Infrastructure.Core.DependencyInjection;
+using Shyelk.Infrastructure.Core.Caching.Redis;
 
 namespace Shyelk.WebSite
 {
@@ -30,6 +31,7 @@ namespace Shyelk.WebSite
         {
             ///注册shyelk框架所有服务;
             services.AddBaseService();
+            services.AddRedisCache(Configuration.GetSection("redisConnection"));
             // Add framework services.
             services.AddMvc();
         }
