@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Loader;
 using Shyelk.Infrastructure.Core.Reflection;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
@@ -20,7 +21,12 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            var types = ReflectionTools.GetSubTypes<EntityTypeCofiguration>();
+            foreach (var type in types)
+            {
+                var instance = Activator.CreateInstance(type) as EntityTypeCofiguration;
+                instance.ModelConfigurate(builder);
+            }
         }
     }
 }
