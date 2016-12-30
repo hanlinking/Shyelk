@@ -39,5 +39,10 @@ namespace Shyelk.WebSite.Controllers
         {
             return View();
         }
+        public IActionResult VerificationCode()
+        {
+           var result= Shyelk.Tools.Drawing.VerificationCode.Generate("2324");
+           return File(result,"image/Png");
+        }
     }
 }

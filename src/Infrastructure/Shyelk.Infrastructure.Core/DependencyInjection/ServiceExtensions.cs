@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Shyelk.Infrastructure.Core.Reflection;
@@ -12,19 +13,19 @@ namespace Shyelk.Infrastructure.Core.DependencyInjection
     {
         public static IServiceCollection AddBaseService(this IServiceCollection services)
         {
-           IEnumerable<Type> types= ReflectionTools.GetSubTypes<IServiceManager>();
-           foreach (var type in types)
-           {
-              IServiceManager manager=ReflectionTools.CreateInstance(type) as IServiceManager;
-             services= manager.RegisterService(services); 
-           }
+            IEnumerable<Type> types = ReflectionTools.GetSubTypes<IServiceManager>();
+            foreach (var type in types)
+            {
+                IServiceManager manager = ReflectionTools.CreateInstance(type) as IServiceManager;
+                services = manager.RegisterService(services);
+            }
             return services;
         }
-        public static IServiceCollection AddBaseService(this IServiceCollection services,IEnumerable<Assembly> assemblies)
+        public static IServiceCollection AddBaseService(this IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
             return services;
         }
-        public static IServiceCollection AddBaseService(this IServiceCollection services,string assemblyPath,Func<Assembly,bool> expression)
+        public static IServiceCollection AddBaseService(this IServiceCollection services, string assemblyPath, Func<Assembly, bool> expression)
         {
             //List<Assembly> assemblies = new List<Assembly>();
             //IFileProvider provider = new PhysicalFileProvider(pluginsPath);
@@ -33,12 +34,11 @@ namespace Shyelk.Infrastructure.Core.DependencyInjection
             //var directoryContent = provider.GetDirectoryContents("").Where(c => c.Name.EndsWith("dll"));
             //foreach (var content in directoryContent)
             //{
-            //    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(content.PhysicalPath);
-            //    builder.AddApplicationPart(assembly);
+            //var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(content.PhysicalPath);
             //}
-           // builder.AddControllersAsServices();
-           // builder.AddViewComponentsAsServices();
-           // return builder;
+            // builder.AddControllersAsServices();
+            // builder.AddViewComponentsAsServices();
+            // return builder;
             return services;
         }
     }

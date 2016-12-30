@@ -5,19 +5,21 @@
   },
   "dependencies": {
     "NETStandard.Library": "1.6.1",
-    "Microsoft.EntityFrameworkCore":"1.1.0",
-    "Microsoft.EntityFrameworkCore.SqlServer":"1.1.0",
-    "Microsoft.EntityFrameworkCore.SQLite":"1.1.0",
-    "Pomelo.EntityFrameworkCore.MySql":"1.1.0",
-    "Microsoft.EntityFrameworkCore.InMemory":"1.1.0"
+    "Microsoft.EntityFrameworkCore": "1.1.0",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
+    "Microsoft.EntityFrameworkCore.SQLite": "1.1.0",
+    "Pomelo.EntityFrameworkCore.MySql": "1.1.0",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
+    "Shyelk.Infrastructure.Core": {
+      "version": "1.0.0-*",
+      "target": "project"
+    }
   },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
   },
-
   "tooling": {
     "defaultNamespace": "Shyelk.Infrastructure.Core.Data.EntityFramework"
   }

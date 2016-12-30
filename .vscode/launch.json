@@ -5,7 +5,7 @@
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build WebSite",
             "program": "${workspaceRoot}\\src\\Client\\Shyelk.WebSite\\bin\\Debug\\netcoreapp1.1\\Shyelk.WebSite.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/Client/Shyelk.WebSite",
@@ -30,6 +30,37 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceRoot}/src/Client/Shyelk.WebSite/Views"
+            }
+        },
+        {
+            "name": ".NET Core Launch (UserCenter)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build UserCenter",
+            "program": "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter\\bin\\Debug\\netcoreapp1.1\\Shyelk.UserCenter.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}/src/Client/Shyelk.UserCenter",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceRoot}/src/Client/Shyelk.UserCenter/Views"
             }
         },
         {

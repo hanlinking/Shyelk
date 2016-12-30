@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shyelk.UserCenter.ServiceAgent
+namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
-    public class Class1
+    public class SEUnitOfWork
     {
-        public Class1()
+        public SEUnitOfWork()
         {
         }
     }

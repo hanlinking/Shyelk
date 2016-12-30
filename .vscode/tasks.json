@@ -5,11 +5,23 @@
     "args": [],
     "tasks": [
         {
-            "taskName": "build",
+            "taskName": "build website",
             "args": [
+                "build",
                 "${workspaceRoot}\\src\\Client\\Shyelk.WebSite\\project.json"
             ],
             "isBuildCommand": true,
+            "suppressTaskName": true,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build UserCenter",
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter\\project.json"
+            ],
+            "isBuildCommand": true,
+            "suppressTaskName": true,
             "problemMatcher": "$msCompile"
         }
     ]

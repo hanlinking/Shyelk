@@ -22,26 +22,22 @@
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "Shyelk.Infrastructure.Core":{
-      "version":"1.0.0-*",
-      "target":"project"
-    },
-    "Shyelk.Infrastructure.Core.Caching.Redis":{
+    "Shyelk.Infrastructure.Core": {
       "version": "1.0.0-*",
       "target": "project"
     },
-    "Shyelk.Tools":{
+    "Shyelk.Infrastructure.Core.Data.EntityFramework":{
       "version":"1.0.0-*",
-      "target": "project"
-    }
+      "target":"project"
+    },
+    "System.IdentityModel.Tokens.Jwt": "5.1.0",
+    "Microsoft.AspNetCore.Authentication.Cookies":"1.1.0"
   },
-
   "tools": {
     "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.1.0-preview4-final"
   },
-
   "frameworks": {
     "netcoreapp1.1": {
       "imports": [
@@ -50,19 +46,16 @@
       ]
     }
   },
-
   "buildOptions": {
     "debugType": "portable",
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
-
   "runtimeOptions": {
     "configProperties": {
       "System.GC.Server": true
     }
   },
-
   "publishOptions": {
     "include": [
       "wwwroot",
@@ -71,14 +64,18 @@
       "web.config"
     ]
   },
-
   "scripts": {
-    "precompile": [ "dotnet bundle" ],
-    "prepublish": [ "bower install" ],
-    "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
+    "precompile": [
+      "dotnet bundle"
+    ],
+    "prepublish": [
+      "bower install"
+    ],
+    "postpublish": [
+      "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
+    ]
   },
-
   "tooling": {
-    "defaultNamespace": "Shyelk.WebSite"
+    "defaultNamespace": "Shyelk.UserCenter"
   }
 }

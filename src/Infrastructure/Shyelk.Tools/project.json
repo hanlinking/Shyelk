@@ -1,17 +1,18 @@
 {
   "version": "1.0.0-*",
-  "buildOptions": {
-    "debugType": "portable"
-  },
+
   "dependencies": {
-    "NETStandard.Library": "1.6.1"
+    "NETStandard.Library": "1.6.1",
+    "ZKWeb.System.Drawing":"2.0.1"
   },
+
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
   },
+
   "tooling": {
-    "defaultNamespace": "Shyelk.UserCenter.ServiceAgent"
+    "defaultNamespace": "Shyelk.Tools"
   }
 }

@@ -4,7 +4,11 @@
     "debugType": "portable"
   },
   "dependencies": {
-    "NETStandard.Library": "1.6.1"
+    "NETStandard.Library": "1.6.1",
+    "Shyelk.Infrastructure.Core.Data.EntityFramework": {
+      "version": "1.0.0-*",
+      "target": "project"
+    }
   },
   "frameworks": {
     "netstandard1.6": {
@@ -12,6 +16,6 @@
     }
   },
   "tooling": {
-    "defaultNamespace": "Shyelk.UserCenter.ServiceAgent"
+    "defaultNamespace": "Shyelk.UserCenter.Entity"
   }
 }

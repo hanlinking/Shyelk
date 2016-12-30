@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shyelk.UserCenter.ServiceAgent
+namespace Shyelk.UserCenter.Models
 {
     public class Class1
     {
