@@ -20,7 +20,7 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             {
                 throw new ArgumentNullException("options is null");
             }
-            services.AddScoped<IDistributedCache, RedisCache>();
+            services.AddSingleton<IRedisCache, RedisCache>();
             services.Configure<RedisCacheOptions>(options);
             return services;
         }
@@ -28,13 +28,13 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
         {
             if (services == null)
             {
-                throw new ArgumentNullException("services is null");
+                throw new ArgumentNullException(nameof(services));
             }
             if (configure == null)
             {
-                throw new ArgumentNullException("configure is null");
+                throw new ArgumentNullException(nameof(configure));
             }
-            services.AddScoped<IDistributedCache, RedisCache>();
+            services.AddSingleton<IRedisCache, RedisCache>();
             services.Configure<RedisCacheOptions>(configure);
             return services;
         }

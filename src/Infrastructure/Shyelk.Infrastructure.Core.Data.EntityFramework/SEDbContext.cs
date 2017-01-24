@@ -17,14 +17,17 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         public SEDbContext() { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(_ConnectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseMySql(_ConnectionString);
+            }
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var types = ReflectionTools.GetSubTypes<EntityTypeCofiguration>();
             foreach (var type in types)
             {
-                var instance = Activator.CreateInstance(type) as EntityTypeCofiguration;
+                var instance = ReflectionTools.CreateInstance(type) as EntityTypeCofiguration;
                 instance.ModelConfigurate(builder);
             }
         }

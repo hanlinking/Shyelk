@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Runtime.Loader;
 using Microsoft.Extensions.DependencyModel;
+using System.Linq.Expressions;
 
 namespace Shyelk.Infrastructure.Core.Reflection
 {
@@ -32,36 +33,35 @@ namespace Shyelk.Infrastructure.Core.Reflection
                 Assembly assembly = type.GetTypeInfo().Assembly;
                 return a.FullName == assembly.FullName || a.GetReferencedAssemblies().Any(ra => ra.FullName == assembly.FullName);
             });
-            return GetSubTypes(type,assemblies);
+            return GetSubTypes(type, assemblies);
         }
-        public static IEnumerable<Type> GetSubTypes(Type type,Assembly assembly)
+        public static IEnumerable<Type> GetSubTypes(Type type, Assembly assembly)
         {
-            return GetSubTypes(type,new List<Assembly>(){{assembly}});
+            return GetSubTypes(type, new List<Assembly>() { { assembly } });
         }
-        public static IEnumerable<Type> GetSubTypes(Type type,IEnumerable<Assembly> assemblies)
+        public static IEnumerable<Type> GetSubTypes(Type type, IEnumerable<Assembly> assemblies)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
             return assemblies.SelectMany(a =>
-            {
-                return a.GetTypes().Where(t =>
-                {
-                    if (t == type)
-                    {
-                        return false;
-                    }
-                    TypeInfo tInfo = t.GetTypeInfo();
-                    if (tInfo.IsAbstract || !tInfo.IsClass || !tInfo.IsPublic)
-                    {
-                        return false;
-                    }
-                    //if (typeInfo.IsGenericTypeDefinition)
-                    // {
-                    //    return type.IsAssignableFromGenericType(t);
-                    //}
-                    return type.IsAssignableFrom(t);
-                });
-            });
-
+             {
+                 return a.GetTypes().Where(t =>
+                 {
+                     if (t == type)
+                     {
+                         return false;
+                     }
+                     TypeInfo tInfo = t.GetTypeInfo();
+                     if (tInfo.IsAbstract || !tInfo.IsClass || !tInfo.IsPublic)
+                     {
+                         return false;
+                     }
+                     if (typeInfo.IsGenericTypeDefinition)
+                     {
+                         return type.IsAssignableFromGenericType(t);
+                     }
+                     return type.IsAssignableFrom(t);
+                 });
+             });
         }
         public static IEnumerable<Type> GetSubTypes<T>()
         {
@@ -69,11 +69,11 @@ namespace Shyelk.Infrastructure.Core.Reflection
         }
         public static IEnumerable<Type> GetSubTypes<T>(Assembly assembly)
         {
-            return GetSubTypes(typeof(T),assembly);
+            return GetSubTypes(typeof(T), assembly);
         }
         public static IEnumerable<Type> GetSubTypes<T>(IEnumerable<Assembly> assemblies)
         {
-            return GetSubTypes(typeof(T),assemblies);
+            return GetSubTypes(typeof(T), assemblies);
         }
         public static object CreateInstance(Type type)
         {
@@ -81,7 +81,7 @@ namespace Shyelk.Infrastructure.Core.Reflection
         }
         public static IEnumerable<Assembly> GetAssemblyFromPath(string path)
         {
-            List<Assembly> assemblies=new List<Assembly>();
+            List<Assembly> assemblies = new List<Assembly>();
             assemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(path));
             return assemblies;
         }

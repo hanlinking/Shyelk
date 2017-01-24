@@ -1,4 +1,6 @@
 using Shyelk.Infrastructure.Core.Data.EntityFramework;
+using System.Collections.Generic;
+
 namespace Shyelk.UserCenter.Entity
 {
     /// <summary>
@@ -10,5 +12,6 @@ namespace Shyelk.UserCenter.Entity
         ///角色名
         ///</summary>
         public string RoleName { get; set; }
+        public virtual ICollection<UserRole> Users { get; set; } = new List<UserRole>();
     }
 }

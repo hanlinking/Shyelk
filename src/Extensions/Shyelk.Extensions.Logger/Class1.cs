@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shyelk.UserCenter.Repository
+namespace Shyelk.Extensions.Logger
 {
     public class Class1
     {

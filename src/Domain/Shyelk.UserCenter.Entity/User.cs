@@ -46,5 +46,7 @@ namespace Shyelk.UserCenter.Entity
         /// </summary>
         ///<value><see cref="String"></see></value>
         public string HeaderUrl { get; set; }
+        public virtual ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
+        public virtual ICollection<LoginHistory> LoginHistories { get; set; } = new List<LoginHistory>();
     }
 }

@@ -28,5 +28,6 @@ namespace Shyelk.UserCenter.Entity
         /// 登录系统名称
         /// </summary>
         public string SystemName { get; set; }
+        public virtual User User { get; set; }
     }
 }

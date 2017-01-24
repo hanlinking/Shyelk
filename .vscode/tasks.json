@@ -5,7 +5,7 @@
     "args": [],
     "tasks": [
         {
-            "taskName": "build website",
+            "taskName": "build WebSite",
             "args": [
                 "build",
                 "${workspaceRoot}\\src\\Client\\Shyelk.WebSite\\project.json"

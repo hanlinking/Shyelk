@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+using Shyelk.Infrastructure.Core.Data.EntityFramework;
+using Shyelk.Infrastructure.Core.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -11,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Shyelk.UserCenter.OAuthTokenProvider;
+using Shyelk.UserCenter.Entity;
 
 namespace Shyelk.UserCenter
 {
@@ -31,6 +35,8 @@ namespace Shyelk.UserCenter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var result = ReflectionTools.GetSubTypes(typeof(IRepository<,>));
+            //var rlt = typeof(BaseEntity<Guid>).IsAssignableFrom(typeof(User));
             // Add framework services.
             services.AddMvc();
         }
@@ -60,8 +66,8 @@ namespace Shyelk.UserCenter
             {
                 Audience = Configuration["TokenProviderOptions:Audience"],
                 Issuer = "ExampleIssuer",
-                SigningSecurityKey="luhanlin1@#$%^&#%",
-                SigningAlgorithm=SecurityAlgorithms.HmacSha256
+                SigningSecurityKey = "luhanlin1@#$%^&#%",
+                SigningAlgorithm = SecurityAlgorithms.HmacSha256
             };
             app.UseOAuthTokenProvider(options);
             var tokenValidationParameters = new TokenValidationParameters
@@ -87,8 +93,8 @@ namespace Shyelk.UserCenter
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AccessDeniedPath="/Home",
-                LoginPath="/Home",
+                AccessDeniedPath = "/Home",
+                LoginPath = "/Home",
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 AuthenticationScheme = "Cookie",

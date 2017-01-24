@@ -26,12 +26,20 @@
       "version": "1.0.0-*",
       "target": "project"
     },
-    "Shyelk.Infrastructure.Core.Data.EntityFramework":{
-      "version":"1.0.0-*",
-      "target":"project"
+    "Shyelk.UserCenter.Entity": {
+      "version": "1.0.0-*",
+      "target": "project"
+    },
+    "Shyelk.UserCenter.Repository": {
+      "version": "1.0.0-*",
+      "target": "project"
+    },
+    "Shyelk.Infrastructure.Core.Data.EntityFramework": {
+      "version": "1.0.0-*",
+      "target": "project"
     },
     "System.IdentityModel.Tokens.Jwt": "5.1.0",
-    "Microsoft.AspNetCore.Authentication.Cookies":"1.1.0"
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.1.0"
   },
   "tools": {
     "BundlerMinifier.Core": "2.2.306",

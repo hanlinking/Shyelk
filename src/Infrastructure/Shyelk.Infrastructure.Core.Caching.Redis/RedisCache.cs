@@ -8,7 +8,7 @@ using StackExchange.Redis;
 
 namespace Shyelk.Infrastructure.Core.Caching.Redis
 {
-    public class RedisCache : IDistributedCache
+    public class RedisCache : IRedisCache, IDisposable
     {
         // KEYS[1] = = key
         // ARGV[1] = absolute-expiration - ticks as long (-1 for none)
@@ -28,6 +28,21 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
         private const long NotPresent = -1;
 
         private static ConnectionMultiplexer _connection;
+        protected ConnectionMultiplexer Connection
+        {
+            get
+            {
+                if (_connection == null||!_connection.IsConnected)
+                {
+                    Lazy<ConnectionMultiplexer> LazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+                    {
+                        return ConnectionMultiplexer.Connect(_options.Configuration);
+                    });
+                    _connection = LazyConnection.Value;
+                }
+                return _connection;
+            }
+        }
         private IDatabase _cache;
 
         private readonly RedisCacheOptions _options;
@@ -154,22 +169,10 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
 
         private void Connect()
         {
-            if (_connection == null)
+            lock (this)
             {
-                try
-                {
-                   _connection = ConnectionMultiplexer.Connect(_options.Configuration);
-                   if (!_connection.IsConnected)
-                   {
-                       throw new Exception("Connect fail");
-                   }
-                }
-                catch (RedisConnectionException ex)
-                {                    
-                    throw ex;
-                }                                            
-            }
-            _cache = _connection.GetDatabase();
+                _cache = Connection.GetDatabase();
+            }            
         }
 
         private async Task ConnectAsync()
@@ -178,12 +181,13 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             {
                 try
                 {
-                   _connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration); 
+                    _connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
                 }
                 catch (RedisConnectionException ex)
-                {                    
+                {
                     throw ex;
-                }                                 
+                }
+
             }
             _cache = _connection.GetDatabase();
         }
@@ -395,6 +399,16 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             }
 
             return absoluteExpiration;
+        }
+        public IDatabase GetDatabase(int db = -1, object asyncState = null)
+        {
+            Connect();
+            return _cache;
+        }
+
+        public void Dispose()
+        {
+            _cache = null;
         }
     }
 }
