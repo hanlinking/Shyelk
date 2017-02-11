@@ -35,9 +35,11 @@ namespace Shyelk.WebSite.Controllers
         }
         public IActionResult Index()
         {
-            _redisCache.SetString("redistest20170105", "123", new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
-            string result = _redisCache.GetString("henrykey");
-            return Content(result);
+            //_redisCache.SetString("redistest20170105", "123", new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
+            //string result = _redisCache.GetString("henrykey");
+            //return Content(result);
+            _logger.LogDebug("this is a testing logger");
+            return Ok();
         }
         public IActionResult StringSet()
         {

@@ -23,6 +23,16 @@
             "isBuildCommand": true,
             "suppressTaskName": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build UserCenter.WebApi",
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.WebApi\\project.json"
+            ],
+            "isBuildCommand": true,
+            "suppressTaskName": true,
+            "problemMatcher": "$msCompile"
         }
     ]
 }

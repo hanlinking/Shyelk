@@ -26,6 +26,59 @@ namespace Shyelk.Infrastructure.Core.Reflection
             return DependencyContext.Default.CompileLibraries
             .Where(lib => !lib.Serviceable && lib.Type != "package").Select(lib => Assembly.Load(new AssemblyName(lib.Name)));
         }
+        public static IEnumerable<Type> GetSubInterface(Type type, IEnumerable<Assembly> assemblies)
+        {
+            TypeInfo typeInfo = type.GetTypeInfo();
+            if (!typeInfo.IsInterface)
+            {
+                throw new ArgumentException(nameof(type) + "must be a interface");
+            }
+            return assemblies.SelectMany(a =>
+             {
+                 return a.GetTypes().Where(t =>
+                 {
+                     if (t == type)
+                     {
+                         return false;
+                     }
+                     TypeInfo tInfo = t.GetTypeInfo();
+                     if (!tInfo.IsInterface)
+                     {
+                         return false;
+                     }
+                     if (typeInfo.IsGenericTypeDefinition)
+                     {
+                         return type.IsAssignableFromGenericType(t);
+                     }
+                     return type.IsAssignableFrom(t);
+                 });
+             });
+        }
+        public static IEnumerable<Type> GetSubInterface(Type type)
+        {
+            var assemblies = _assemblies.Where(a =>
+            {
+                Assembly assembly = type.GetTypeInfo().Assembly;
+                return a.FullName == assembly.FullName || a.GetReferencedAssemblies().Any(ra => ra.FullName == assembly.FullName);
+            });
+            return GetSubInterface(type, assemblies);
+        }
+        public static IEnumerable<Type> GetSubInterface(Type type, Assembly assembly)
+        {
+            return GetSubTypes(type, new List<Assembly>() { { assembly } });
+        }
+        public static IEnumerable<Type> GetSubInterface<T>()
+        {
+            return GetSubInterface(typeof(T));
+        }
+        public static IEnumerable<Type> GetSubInterface<T>(Assembly assembly)
+        {
+            return GetSubInterface(typeof(T), assembly);
+        }
+        public static IEnumerable<Type> GetSubInterface<T>(IEnumerable<Assembly> assemblies)
+        {
+            return GetSubInterface(typeof(T), assemblies);
+        }
         public static IEnumerable<Type> GetSubTypes(Type type)
         {
             var assemblies = _assemblies.Where(a =>

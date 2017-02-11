@@ -1,10 +1,9 @@
 {
-    "projects":[
+    "projects": [
         "src/Infrastructure",
         "src/Client",
         "src/Domain",
-        "src/AgentService",
-        "src/Presentation",
+        "src/Extensions",
         "test"
     ]
 }

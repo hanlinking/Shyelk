@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
@@ -61,6 +62,34 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceRoot}/src/Client/Shyelk.UserCenter/Views"
+            }
+        },
+        {
+            "name": ".NET Core Launch (UserCenter.WebApi)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build UserCenter.WebApi",
+            "program": "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.WebApi\\bin\\Debug\\netcoreapp1.1\\Shyelk.UserCenter.WebApi.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}/src/Client/Shyelk.UserCenter.WebApi",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
             }
         },
         {

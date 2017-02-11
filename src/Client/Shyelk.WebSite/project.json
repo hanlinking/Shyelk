@@ -33,6 +33,10 @@
         "Shyelk.Tools": {
             "version": "1.0.0-*",
             "target": "project"
+        },
+        "Shyelk.Extensions.Logging":{
+            "version":"1.0.0-*",
+            "target":"project"
         }       
     },
     "tools": {

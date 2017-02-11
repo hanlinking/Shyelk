@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shyelk.UserCenter.WebApi.OAuthTokenProvider;
+using Shyelk.Infrastructure.Core.DependencyInjection;
 
 namespace Shyelk.UserCenter.WebApi
 {
@@ -32,6 +33,7 @@ namespace Shyelk.UserCenter.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddBaseService();
             // Add framework services.
             services.AddMvc();
         }
