@@ -23,5 +23,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         ///获取TEntity 查询的IQuerable<TEntity> 对象
         ///</summary>   
         IQueryable<TEntity> Query { get; }
+        Task<int> SaveChangesAsync();
+        int SaveChanges();
     }
 }

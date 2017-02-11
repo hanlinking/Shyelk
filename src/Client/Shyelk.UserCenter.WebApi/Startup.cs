@@ -15,6 +15,8 @@ using Shyelk.UserCenter.WebApi.OAuthTokenProvider;
 using Shyelk.Infrastructure.Core.DependencyInjection;
 using Shyelk.Infrastructure.Core.Data.EntityFramework;
 using Shyelk.UserCenter.IService;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Shyelk.UserCenter.WebApi
 {
@@ -35,7 +37,11 @@ namespace Shyelk.UserCenter.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {             
-            SEDbContextManager.Initial("default",Configuration.GetConnectionString("LogDb"),DatabaseType.MySql,"~/bin/Shyelk.UserCenter.Entity");
+            var path = AppContext.BaseDirectory;
+            SEDbContextManager.Initial("default"
+            ,Configuration.GetConnectionString("LogDb")
+            ,DatabaseType.MySql
+            ,path+"\\Shyelk.UserCenter.Entity");
             services.AddBaseService();
             // Add framework services.
             services.AddMvc();

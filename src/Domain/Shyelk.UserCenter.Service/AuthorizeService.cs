@@ -11,12 +11,11 @@ namespace Shyelk.UserCenter.Service
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        public AuthorizeService(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork)
+        private IUnitOfWork _unitOfWork;
+        public AuthorizeService(IUserRepository userRepository, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public Task<ClaimsIdentity> Login(string account, string password)

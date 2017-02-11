@@ -46,5 +46,15 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         {
             SEDbContextManager.Dispose();
         }
+
+        public Task<int> SaveChangesAsync()
+        {
+           return _dbContext.SaveChangesAsync();
+        }
+
+        public int SaveChanges()
+        {
+            return _dbContext.SaveChanges();
+        }
     }
 }
