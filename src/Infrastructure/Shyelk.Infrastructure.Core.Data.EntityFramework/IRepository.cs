@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
-    public interface IRepository<Tkey, TEntity>
+    public interface IRepository<Tkey, TEntity>: System.IDisposable
     {
         ///<summary>
         ///根据Key获取实体

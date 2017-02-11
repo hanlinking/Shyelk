@@ -20,15 +20,23 @@
             "version": "1.0.0-*",
             "target": "project"
         },
-        "Shyelk.UserCenter.Entity":{
+        "Shyelk.UserCenter.Entity": {
             "version": "1.0.0-*",
             "target": "project"
         },
-        "Shyelk.UserCenter.Models":{
+        "Shyelk.UserCenter.Models": {
             "version": "1.0.0-*",
             "target": "project"
         },
-        "Shyelk.UserCenter.Repository":{
+        "Shyelk.UserCenter.Repository": {
+            "version": "1.0.0-*",
+            "target": "project"
+        },
+        "Shyelk.UserCenter.IService": {
+            "version": "1.0.0-*",
+            "target": "project"
+        },
+        "Shyelk.UserCenter.Service": {
             "version": "1.0.0-*",
             "target": "project"
         },

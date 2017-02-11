@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Shyelk.UserCenter.IService;
 
 namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
 {
@@ -32,7 +33,6 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
         {
             _next = next;
             _logger = loggerFactory.CreateLogger<TokenProviderMiddleware>();
-
             _options = options.Value;
             ThrowIfInvalidOptions(_options);
 

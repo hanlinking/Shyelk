@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shyelk.UserCenter.WebApi.OAuthTokenProvider;
 using Shyelk.Infrastructure.Core.DependencyInjection;
+using Shyelk.Infrastructure.Core.Data.EntityFramework;
+using Shyelk.UserCenter.IService;
 
 namespace Shyelk.UserCenter.WebApi
 {
@@ -32,7 +34,8 @@ namespace Shyelk.UserCenter.WebApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {             
+            SEDbContextManager.Initial("default",Configuration.GetConnectionString("LogDb"),DatabaseType.MySql,"~/bin/Shyelk.UserCenter.Entity");
             services.AddBaseService();
             // Add framework services.
             services.AddMvc();
@@ -48,11 +51,13 @@ namespace Shyelk.UserCenter.WebApi
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("luhanlin1@#$%^&#%"));
+            var service=app.ApplicationServices.GetService<IAuthorizeService>();
             var options = new TokenProviderOptions
             {
                 Audience = "ExampleAudience",
                 Issuer = "ExampleIssuer",
                 SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+                IdentityResolver=service.Login
             };
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
             app.UseMvc();

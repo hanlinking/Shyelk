@@ -3,9 +3,9 @@ using Shyelk.UserCenter.Entity;
 
 namespace Shyelk.UserCenter.Repository
 {
-    public class RoleRepository : BaseRepository<string, User>, IUserRepository
+    public class RoleRepository : BaseRepository<string, Role>, IRoleRepository
     {
-        public RoleRepository(SEDbContext dbContext) : base(dbContext)
+        public RoleRepository() : base()
         {
         }
     }

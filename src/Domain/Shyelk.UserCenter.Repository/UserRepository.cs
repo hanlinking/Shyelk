@@ -6,7 +6,7 @@ namespace Shyelk.UserCenter.Repository
 {
     public class UserRepository : BaseRepository<string, User>, IUserRepository
     {
-        public UserRepository(SEDbContext dbContext) : base(dbContext)
+        public UserRepository() : base()
         {
         }
     }

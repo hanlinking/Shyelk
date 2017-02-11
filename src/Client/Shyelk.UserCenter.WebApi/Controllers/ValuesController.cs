@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shyelk.UserCenter.IService;
 
 namespace Shyelk.UserCenter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly IAuthorizeService _authorizeService;
+        public ValuesController(IAuthorizeService authorizeService)
+        {
+            _authorizeService=authorizeService;
+        }
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()

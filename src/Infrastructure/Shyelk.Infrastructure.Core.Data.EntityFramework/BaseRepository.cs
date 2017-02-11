@@ -13,10 +13,12 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
     {
         protected readonly SEDbContext _dbContext;
         private readonly DbSet<TEntity> _DbSet;
-        public BaseRepository(SEDbContext dbContext)
+        public BaseRepository(string name)
         {
-
-            _dbContext = dbContext;
+            _dbContext = SEDbContextManager.GetContext(name);
+        }
+        public BaseRepository(){
+            _dbContext=SEDbContextManager.GetContext();
         }
         protected virtual DbSet<TEntity> DbSet { get { return _DbSet ?? _dbContext.Set<TEntity>(); } }
 
@@ -40,5 +42,9 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
             return DbSet.SingleOrDefaultAsync(s => s.Id == key, cancellationToken);
         }
 
+       public void Dispose()
+        {
+            SEDbContextManager.Dispose();
+        }
     }
 }
