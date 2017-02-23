@@ -8,6 +8,6 @@ namespace Shyelk.UserCenter.Entity
     /// </summary>
     public interface IUserRepository : IRepository<string, User>
     {
-
+        
     }
 }

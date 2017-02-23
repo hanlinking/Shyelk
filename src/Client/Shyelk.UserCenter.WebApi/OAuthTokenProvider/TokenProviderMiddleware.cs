@@ -1,6 +1,8 @@
 // Copyright (c) Nate Barbettini. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using System;
+using System.Text;
+using System.IO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Shyelk.UserCenter.IService;
+using Shyelk.UserCenter.Models;
 
 namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
 {
@@ -51,8 +54,7 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
             }
 
             // Request must be POST with Content-Type: application/x-www-form-urlencoded
-            if (!context.Request.Method.Equals("POST")
-               || !context.Request.HasFormContentType)
+            if (!context.Request.Method.Equals("POST"))
             {
                 context.Response.StatusCode = 400;
                 return context.Response.WriteAsync("Bad request.");
@@ -65,13 +67,19 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
 
         private async Task GenerateToken(HttpContext context)
         {
-            var username = context.Request.Form["username"];
-            var password = context.Request.Form["password"];
-
-            var identity = await _options.IdentityResolver(username, password);
+            //var username = context.Request.Form["username"];
+            //var password = context.Request.Form["password"];
+            var body = context.Request.Body;
+            string json=string.Empty;
+            using(StreamReader reader=new StreamReader(body,Encoding.UTF8))
+            {
+               json= reader.ReadToEnd();
+            }
+            LoginDto dto =JsonConvert.DeserializeObject<LoginDto>(json);
+            var identity = await _options.IdentityResolver(dto);
             if (identity == null)
             {
-                context.Response.StatusCode = 400;
+                context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Invalid username or password.");
                 return;
             }
@@ -82,7 +90,7 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
             // You can add other claims here, if you want:
             var claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, dto.Account),
                 new Claim(JwtRegisteredClaimNames.Jti, await _options.NonceGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(now).ToString(), ClaimValueTypes.Integer64)
             };
@@ -95,18 +103,16 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
                 notBefore: now,
                 expires: now.Add(_options.Expiration),
                 signingCredentials: _options.SigningCredentials);
-                string encodedJwt=string.Empty;
-                try
-                {
-                     encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-                }
-                catch (System.Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                    throw ex;
-                }
-            
-
+            string encodedJwt = string.Empty;
+            try
+            {
+                encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw ex;
+            }
             var response = new
             {
                 access_token = encodedJwt,

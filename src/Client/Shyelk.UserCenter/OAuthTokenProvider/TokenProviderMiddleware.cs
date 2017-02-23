@@ -27,13 +27,13 @@ namespace Shyelk.UserCenter.OAuthTokenProvider
 
         public TokenProviderMiddleware(
             RequestDelegate next,
-            TokenProviderOptions options,
+            IOptions<TokenProviderOptions> options,
             ILoggerFactory loggerFactory)
         {
             _next = next;
             _logger = loggerFactory.CreateLogger<TokenProviderMiddleware>();
 
-            _options = options;
+            _options = options.Value;
             ThrowIfInvalidOptions(_options);
 
             _serializerSettings = new JsonSerializerSettings
@@ -67,7 +67,7 @@ namespace Shyelk.UserCenter.OAuthTokenProvider
         {
             var username = context.Request.Form["username"];
             var password = context.Request.Form["password"];
-
+            var audience=context.Request.Form["audience"];
             var identity = await _options.IdentityResolver(username, password);
             if (identity == null)
             {
@@ -90,7 +90,7 @@ namespace Shyelk.UserCenter.OAuthTokenProvider
             // Create the JWT and write it to a string
             var jwt = new JwtSecurityToken(
                 issuer: _options.Issuer,
-                audience: _options.Audience,
+                audience: audience,
                 claims: claims,
                 notBefore: now,
                 expires: now.Add(_options.Expiration),

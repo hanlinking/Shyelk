@@ -3,8 +3,7 @@
     "command": "dotnet",
     "isShellCommand": true,
     "args": [],
-    "tasks": [
-        {
+    "tasks": [{
             "taskName": "build WebSite",
             "args": [
                 "build",
@@ -29,6 +28,16 @@
             "args": [
                 "build",
                 "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.WebApi\\project.json"
+            ],
+            "isBuildCommand": true,
+            "suppressTaskName": true,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build ConsoleApp",
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\Client\\Shyelk.ConsoleApp\\project.json"
             ],
             "isBuildCommand": true,
             "suppressTaskName": true,

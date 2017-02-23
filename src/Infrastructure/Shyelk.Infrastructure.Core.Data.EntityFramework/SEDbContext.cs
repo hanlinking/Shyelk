@@ -5,21 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.Loader;
 using Shyelk.Infrastructure.Core.Reflection;
+using System.Reflection;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
     public class SEDbContext : DbContext
     {
         protected readonly string ConnectionString;
-        protected readonly string ModelMapperPath;
+        protected readonly Assembly[] MapperAssembly;
         protected readonly DatabaseType Type;
         public SEDbContext(DbContextOptions options) : base(options)
         {
 
         }
-        public SEDbContext(string connetionString, string modelMapperPath, DatabaseType type = DatabaseType.Sqlserver) : base()
+        internal SEDbContext(string connetionString, Assembly[] mapperAssembly, DatabaseType type = DatabaseType.Sqlserver) : base()
         {
-            ModelMapperPath = modelMapperPath;
+            MapperAssembly = mapperAssembly;
             ConnectionString = connetionString;
             Type = type;
         }
@@ -48,18 +49,9 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         {
             string assemblyPath = string.Empty;
             IEnumerable<Type> types = null;
-            if (!string.IsNullOrEmpty(ModelMapperPath))
+            if (MapperAssembly!=null&&MapperAssembly.Length>0)
             {
-                if (!ModelMapperPath.EndsWith(".dll"))
-                {
-                    assemblyPath = ModelMapperPath + ".dll";
-                }
-                else
-                {
-                    assemblyPath = ModelMapperPath;
-                }
-                var assemblies = ReflectionTools.GetAssemblyFromPath(ModelMapperPath);
-                types = ReflectionTools.GetSubTypes<EntityTypeCofiguration>(assemblies);
+                types = ReflectionTools.GetSubTypes<EntityTypeCofiguration>(MapperAssembly);
             }
             if (types == null)
             {

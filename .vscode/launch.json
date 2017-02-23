@@ -1,7 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
+
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
@@ -72,6 +72,34 @@
             "program": "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.WebApi\\bin\\Debug\\netcoreapp1.1\\Shyelk.UserCenter.WebApi.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/Client/Shyelk.UserCenter.WebApi",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": ".NET Core Launch (ConsoleApp)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build ConsoleApp",
+            "program": "${workspaceRoot}\\src\\Client\\Shyelk.ConsoleApp\\bin\\Debug\\netcoreapp1.1\\Shyelk.ConsoleApp.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}/src/Client/Shyelk.ConsoleApp",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {

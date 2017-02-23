@@ -35,9 +35,10 @@ namespace Shyelk.UserCenter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var result = ReflectionTools.GetSubTypes(typeof(IRepository<,>));
+            //var result = ReflectionTools.GetSubTypes(typeof(IRepository<,>));
             //var rlt = typeof(BaseEntity<Guid>).IsAssignableFrom(typeof(User));
             // Add framework services.
+            services.Configure<TokenProviderOptions>(Configuration.GetSection("TokenProviderOptions"));
             services.AddMvc();
         }
 
@@ -62,14 +63,7 @@ namespace Shyelk.UserCenter
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("luhanlin1@#$%^&#%"));
-            var options = new TokenProviderOptions
-            {
-                Audience = Configuration["TokenProviderOptions:Audience"],
-                Issuer = "ExampleIssuer",
-                SigningSecurityKey = "luhanlin1@#$%^&#%",
-                SigningAlgorithm = SecurityAlgorithms.HmacSha256
-            };
-            app.UseOAuthTokenProvider(options);
+            app.UseOAuthTokenProvider();
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signing key must match!
@@ -78,11 +72,11 @@ namespace Shyelk.UserCenter
 
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = "ExampleIssuer",
+                ValidIssuer = "uc.igidia.com",
 
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = "ExampleAudience",
+                ValidAudience = "Audience",
 
                 // Validate the token expiry
                 ValidateLifetime = true,
@@ -93,8 +87,8 @@ namespace Shyelk.UserCenter
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AccessDeniedPath = "/Home",
-                LoginPath = "/Home",
+                AccessDeniedPath = "/values/AccessDenied",
+                LoginPath = "/values/Login",
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 AuthenticationScheme = "Cookie",

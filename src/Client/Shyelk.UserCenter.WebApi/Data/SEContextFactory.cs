@@ -10,6 +10,7 @@ namespace Shyelk.UserCenter.WebApi.Data
     {
         public SEDbContext Create(DbContextFactoryOptions options)
         {
+            
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)

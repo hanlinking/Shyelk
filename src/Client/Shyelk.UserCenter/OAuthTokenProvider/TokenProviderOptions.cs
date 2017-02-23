@@ -44,7 +44,7 @@ namespace Shyelk.UserCenter.OAuthTokenProvider
         /// <summary>
         /// The signing key to use when generating tokens.
         /// </summary>
-        public SigningCredentials SigningCredentials { get { return new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes("luhanlin1@#$%^&#%")),SigningAlgorithm);} }
+        public SigningCredentials SigningCredentials { get { return new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SigningSecurityKey)),SigningAlgorithm);} }
 
         /// <summary>
         /// Resolves a user identity given a username and password.

@@ -7,24 +7,28 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
-    public class SEUnitOfWork:IUnitOfWork
+    public class SEUnitOfWork : IUnitOfWork
     {
         private readonly SEDbContext _dbContext;
         public SEUnitOfWork(string connectionName)
         {
-            _dbContext=SEDbContextManager.GetContext(connectionName);
+            _dbContext = SEDbContextManager.GetDbContext(connectionName);
         }
-        public SEUnitOfWork(){
-            _dbContext=SEDbContextManager.GetContext();
+        public SEUnitOfWork()
+        {
+            _dbContext = SEDbContextManager.GetDbContext();
         }
         public void Dispose()
         {
-            SEDbContextManager.Dispose();
+            if (_dbContext != null)
+            {
+                _dbContext.Dispose();
+            }
         }
 
         public int SaveChanges()
         {
-           return _dbContext.SaveChanges();
+            return _dbContext.SaveChanges();
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -34,7 +38,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 
         public IDbContextTransaction BeginTransaction()
         {
-           return _dbContext.Database.BeginTransaction();
+            return _dbContext.Database.BeginTransaction();
         }
 
         public void CommitTransaction()

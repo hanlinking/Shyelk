@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shyelk.UserCenter.Models;
 using Shyelk.UserCenter.IService;
+using Microsoft.Extensions.Logging;
 
 namespace Shyelk.UserCenter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private readonly IAuthorizeService _authorizeService;
-        public ValuesController(IAuthorizeService authorizeService)
+        private readonly ILogger _logger;
+        private readonly IUserManageService _userManageService;
+        public ValuesController(IUserManageService userManageService,ILoggerFactory loggerFactory)
         {
-            _authorizeService=authorizeService;
+            _userManageService=userManageService;
+            _logger=loggerFactory.CreateLogger<ValuesController>();
         }
         // GET api/values
         [HttpGet]
@@ -31,8 +35,13 @@ namespace Shyelk.UserCenter.WebApi.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("SignUp")]
+        public async Task<IActionResult> SignUp([FromBody] UserDto dto)
         {
+            
+            var result= await this._userManageService.CreateAsync(dto);
+            _logger.LogDebug(result.ToString());
+            return Ok(result);
         }
 
         // PUT api/values/5

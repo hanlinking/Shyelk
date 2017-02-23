@@ -2,7 +2,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
     internal class SEDbContextConfig
     {
-        public SEDbContextConfig(string connection,DatabaseType type,string entityMapper)
+        public SEDbContextConfig(string connection,DatabaseType type, System.Reflection.Assembly[] entityMapper)
         {
             Connection=connection;
             Type=type;
@@ -10,6 +10,6 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         }
         public string Connection{get;set;}
         public DatabaseType Type{get;set;}
-        public string EntityMapper{get;set;}
+        public System.Reflection.Assembly[] EntityMapper{get;set;}
     }
 }

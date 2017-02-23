@@ -3,6 +3,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Shyelk.UserCenter.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
@@ -42,12 +43,12 @@ namespace Shyelk.UserCenter.WebApi.OAuthTokenProvider
         /// <summary>
         /// Resolves a user identity given a username and password.
         /// </summary>
-        public Func<string, string, Task<ClaimsIdentity>> IdentityResolver { get; set; }
-        = (username, password) =>
+        public Func<LoginDto, Task<ClaimsIdentity>> IdentityResolver { get; set; }
+        = (loginDto) =>
         {
-            if (username == "TEST" && password == "TEST123")
+            if (loginDto.Account == "TEST" && loginDto.Password == "TEST123")
             {
-                return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"), new Claim[] { }));
+                return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(loginDto.Account, "Token"), new Claim[] { }));
             }
 
             // Credentials are invalid, or account doesn't exist

@@ -40,7 +40,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         ///<summary>
         ///数据来源
         ///</summary>
-        public virtual string Sys_DataSource { get; set; } = "手动创建";
+        public virtual string Sys_DataSource { get; set; } = "manual Create";
         /// <summary>
         /// 时间戳
         /// </summary>

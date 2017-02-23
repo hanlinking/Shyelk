@@ -1,102 +1,72 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
-using Shyelk.Infrastructure.Core.Data.EntityFramework.Exceptions;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
     public sealed class SEDbContextManager
     {
-        private SEDbContextManager(){}
+        private SEDbContextManager() { }
         private static IDictionary<string, SEDbContextConfig> _dbContextConfigMap = new Dictionary<string, SEDbContextConfig>();
-        private static ConcurrentDictionary<int, List<SEDbContextStorge>> _dbContextMap = new ConcurrentDictionary<int, List<SEDbContextStorge>>();
-        private static Object LockObj = new Object();
-        public static void Initial(string connectionName, string connectionString, DatabaseType type, string entitymap)
+        [ThreadStaticAttribute]
+        private static List<SEDbContextStorge> SEDbContextStorgeList;
+        private static AsyncLocal<List<SEDbContextStorge>> _asyncLocalStorge=new AsyncLocal<List<SEDbContextStorge>>();
+        public static void Initial(string connectionName, string connectionString, DatabaseType type, string[] assemblyNames)
         {
             if (string.IsNullOrEmpty(connectionName))
             {
                 throw new ArgumentNullException(nameof(connectionName));
             }
-            if (string.IsNullOrEmpty(entitymap))
+            List<Assembly> entityMapperAssmeblies = null;
+            if (assemblyNames != null && assemblyNames.Length > 0)
             {
-                throw new ArgumentNullException(entitymap);
+                entityMapperAssmeblies = new List<Assembly>();
+                foreach (var name in assemblyNames)
+                {
+                    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(name));
+                    entityMapperAssmeblies.Add(assembly);
+                }
             }
-            _dbContextConfigMap.Add(connectionName, new SEDbContextConfig(connectionString, type, entitymap));
+            _dbContextConfigMap.Add(connectionName, new SEDbContextConfig(connectionString, type, entityMapperAssmeblies.ToArray()));
         }
-        internal static SEDbContext GetContext(string name)
+        internal static SEDbContext GetDbContext(string name)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            SEDbContextConfig dbContextStorge = null;
-            List<SEDbContextStorge> dbContexts = null;
-            SEDbContext dbContext = null;
-            if (!_dbContextConfigMap.TryGetValue(name, out dbContextStorge))
+            SEDbContextConfig dbContextConfig = null;
+            if (string.IsNullOrEmpty(name))
+            {
+                name="default";
+                dbContextConfig = _dbContextConfigMap.FirstOrDefault().Value;
+            }
+            else if (!_dbContextConfigMap.TryGetValue(name, out dbContextConfig))
             {
                 throw new KeyNotFoundException(nameof(name));
             }
-
-            if (!_dbContextMap.TryGetValue(threadId, out dbContexts))
+            if (_asyncLocalStorge.Value==null||_asyncLocalStorge.Value.Count() == 0)
             {
-                dbContexts = new List<SEDbContextStorge>();
-                dbContext = new SEDbContext(dbContextStorge.Connection, dbContextStorge.EntityMapper, dbContextStorge.Type);
-                dbContexts.Add(new SEDbContextStorge(name, dbContext));
-                _dbContextMap.TryAdd(threadId, dbContexts);
+                _asyncLocalStorge.Value=new List<SEDbContextStorge>();
+                SEDbContext dbContext = new SEDbContext(dbContextConfig.Connection, dbContextConfig.EntityMapper, dbContextConfig.Type);
+                SEDbContextStorge dbcontextStorge = new SEDbContextStorge(name, dbContext);
+                _asyncLocalStorge.Value.Add(dbcontextStorge);
+                return dbContext;
             }
             else
             {
-                var contextStorge = dbContexts.FirstOrDefault(f => f.Name == name);
-                if (contextStorge == null)
+                var context = _asyncLocalStorge.Value.FirstOrDefault(f=>f.Name==name).Context;
+                if (context == null)
                 {
-                    dbContext = new SEDbContext(dbContextStorge.Connection, dbContextStorge.EntityMapper, dbContextStorge.Type);
-                    dbContexts.Add(new SEDbContextStorge(name, dbContext));
-                    _dbContextMap.TryAdd(threadId, dbContexts);
-                }else
-                {
-                    dbContext=contextStorge.Context;
+                    context = new SEDbContext(dbContextConfig.Connection, dbContextConfig.EntityMapper, dbContextConfig.Type);
+                    SEDbContextStorge dbcontextStorge = new SEDbContextStorge(name, context);
+                    _asyncLocalStorge.Value.Add(dbcontextStorge);
                 }
+                return context;
             }
-            return dbContext;
         }
-        internal static SEDbContext GetContext()
+        internal static SEDbContext GetDbContext()
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            SEDbContextConfig dbContextStorge = _dbContextConfigMap.FirstOrDefault().Value;
-            if (dbContextStorge==null)
-            {
-                throw new SEDbContextException("DbContext Not Config");
-            }
-            List<SEDbContextStorge> dbContexts = null;
-            SEDbContext dbContext = null;
-
-            if (!_dbContextMap.TryGetValue(threadId, out dbContexts))
-            {
-                dbContexts = new List<SEDbContextStorge>();
-                dbContext = new SEDbContext(dbContextStorge.Connection, dbContextStorge.EntityMapper, dbContextStorge.Type);
-                dbContexts.Add(new SEDbContextStorge("", dbContext));
-                _dbContextMap.TryAdd(threadId, dbContexts);
-            }
-            else
-            {
-                var contextStorge = dbContexts.FirstOrDefault();
-                if (contextStorge == null)
-                {
-                    dbContext = new SEDbContext(dbContextStorge.Connection, dbContextStorge.EntityMapper, dbContextStorge.Type);
-                    dbContexts.Add(new SEDbContextStorge("", dbContext));
-                    _dbContextMap.TryAdd(threadId, dbContexts);
-                }else
-                {
-                    dbContext=contextStorge.Context;
-                }
-            }
-            return dbContext;
-        }
-       public static void Dispose()
-        {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            List<SEDbContextStorge> SEDbContextStorgeList = null;
-            _dbContextMap.TryRemove(threadId, out SEDbContextStorgeList);
+           return GetDbContext("");
         }
     }
     public enum DatabaseType
