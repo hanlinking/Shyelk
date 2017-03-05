@@ -3,11 +3,12 @@ using Shyelk.UserCenter.Entity;
 using Shyelk.Infrastructure.Core.Data.EntityFramework;
 using Shyelk.Infrastructure.Core.Security;
 using Newtonsoft.Json;
-using System;
+using System.Linq;
 using System.Security.Claims;
 using Shyelk.UserCenter.Models;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
 
 namespace Shyelk.UserCenter.Service
@@ -23,7 +24,7 @@ namespace Shyelk.UserCenter.Service
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _unitOfWork=new SEUnitOfWork();
+            _unitOfWork = new SEUnitOfWork();
             _mapper = mapper;
             _logger = loggerFactory.CreateLogger(nameof(UserManagerService));
         }
@@ -39,8 +40,8 @@ namespace Shyelk.UserCenter.Service
                        var pwmd5 = MD5Tools.MD5Encrypt32(dto.Password);
                        var scmd5 = StringGenerator.GetMixString(32);
                        var pwdHash = MD5Tools.MD5Encrypt64(pwmd5 + scmd5);
-                       user.PasswordHash=pwdHash;
-                       user.SecurityCode=scmd5;
+                       user.PasswordHash = pwdHash;
+                       user.SecurityCode = scmd5;
                        _userRepository.Add(user);
                        int count = _unitOfWork.SaveChanges();
                        _logger.LogDebug("保存成功" + count);
@@ -54,14 +55,26 @@ namespace Shyelk.UserCenter.Service
                });
         }
 
+        public Task<UserDto> GetUserByName(string userName)
+        {
+            return Task.FromResult<UserDto>(_userRepository.Query.Where(u => u.UserName == userName).ProjectTo<UserDto>().FirstOrDefault());
+        }
+
         public Task<ClaimsIdentity> LoginAsync(LoginDto dto)
         {
-            bool result = true;
-            if (result)
+            User user = _userRepository.Query.FirstOrDefault(f => f.Email == dto.Account || f.Phone == dto.Account || f.UserName == dto.Account);
+            if (user == null)
+            {
+                return Task.FromResult<ClaimsIdentity>(null);
+            }
+            string pwmd5 = MD5Tools.MD5Encrypt32(dto.Password);
+            string pwdHash = MD5Tools.MD5Encrypt64(pwmd5 + user.SecurityCode);
+            if (pwdHash==user.PasswordHash)
             {
                 return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(dto.Account, "Token"), new Claim[] { }));
             }
             return Task.FromResult<ClaimsIdentity>(null);
+
         }
 
     }

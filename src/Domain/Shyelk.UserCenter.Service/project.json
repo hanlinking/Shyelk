@@ -21,6 +21,10 @@
             "version": "1.0.0-*",
             "target": "project"
         },
+        "Shyelk.Infrastructure.Core.Caching.Redis": {
+            "version": "1.0.0-*",
+            "target": "project"
+        },
         "NETCore.MailKit": "1.0.1",
         "AutoMapper": "5.2.0"
     },

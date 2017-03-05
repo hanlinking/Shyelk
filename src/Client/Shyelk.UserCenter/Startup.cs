@@ -38,6 +38,7 @@ namespace Shyelk.UserCenter
             //var result = ReflectionTools.GetSubTypes(typeof(IRepository<,>));
             //var rlt = typeof(BaseEntity<Guid>).IsAssignableFrom(typeof(User));
             // Add framework services.
+            services.AddRedisCache(Configuration.GetSection("redisConnection"));
             services.Configure<TokenProviderOptions>(Configuration.GetSection("TokenProviderOptions"));
             services.AddMvc();
         }
@@ -62,41 +63,41 @@ namespace Shyelk.UserCenter
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("luhanlin1@#$%^&#%"));
-            app.UseOAuthTokenProvider();
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                // The signing key must match!
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
+            //var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("luhanlin1@#$%^&#%"));
+            // app.UseOAuthTokenProvider();
+            // var tokenValidationParameters = new TokenValidationParameters
+            // {
+            //     // The signing key must match!
+            //     ValidateIssuerSigningKey = true,
+            //     IssuerSigningKey = signingKey,
 
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = "uc.igidia.com",
+            //     // Validate the JWT Issuer (iss) claim
+            //     ValidateIssuer = true,
+            //     ValidIssuer = "uc.igidia.com",
 
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = "Audience",
+            //     // Validate the JWT Audience (aud) claim
+            //     ValidateAudience = true,
+            //     ValidAudience = "Audience",
 
-                // Validate the token expiry
-                ValidateLifetime = true,
+            //     // Validate the token expiry
+            //     ValidateLifetime = true,
 
-                // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = TimeSpan.Zero
-            };
+            //     // If you want to allow a certain amount of clock drift, set that here:
+            //     ClockSkew = TimeSpan.Zero
+            // };
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AccessDeniedPath = "/values/AccessDenied",
-                LoginPath = "/values/Login",
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                AuthenticationScheme = "Cookie",
-                CookieName = "access_token",
-                TicketDataFormat = new ShyelkDataFormat(
-                    SecurityAlgorithms.HmacSha256,
-                    tokenValidationParameters)
-            });
+            // app.UseCookieAuthentication(new CookieAuthenticationOptions
+            // {
+            //     AccessDeniedPath = "/values/AccessDenied",
+            //     LoginPath = "/values/Login",
+            //     AutomaticAuthenticate = true,
+            //     AutomaticChallenge = true,
+            //     AuthenticationScheme = "Cookie",
+            //     CookieName = "access_token",
+            //     TicketDataFormat = new ShyelkDataFormat(
+            //         SecurityAlgorithms.HmacSha256,
+            //         tokenValidationParameters)
+            // });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

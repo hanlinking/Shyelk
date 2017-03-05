@@ -17,37 +17,53 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <button v-on:click="clickme">点击我</button>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'hello',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    import $ from 'jquery'
+    import 'jquery.cookie'
+    module.export = {
+        name: 'hello',
+        data() {
+            return {
+                msg: '你是一个傻逼吗？'
+            }
+        },
+        methods: {
+            clickme: function() {
+                alert("点击一下我")
+            },
+            isLogin: function() {
+                if ($.cookie('token')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
-  }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+    h1,
+    h2 {
+        font-weight: normal;
+    }
+    
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    li {
+        display: inline-block;
+        margin: 0 10px;
+    }
+    
+    a {
+        color: #42b983;
+    }
 </style>

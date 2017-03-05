@@ -24,10 +24,10 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "taskName": "build UserCenter.WebApi",
+            "taskName": "build UserCenter.Web",
             "args": [
                 "build",
-                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.WebApi\\project.json"
+                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.Web\\project.json"
             ],
             "isBuildCommand": true,
             "suppressTaskName": true,

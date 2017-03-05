@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Shyelk.UserCenter.IService;
+
 namespace Shyelk.UserCenter.Service
 {
     public class MessageService : IMessageService

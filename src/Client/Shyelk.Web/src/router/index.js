@@ -1,15 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from 'components/Hello'
+import hello from 'components/Hello'
+import login from 'components/login'
 import $ from 'jquery'
 //require('bootstrap')
-
 Vue.use(Router)
 
 export default new Router({
     routes: [{
-        path: '/',
+        path: '/hello',
         name: 'Hello',
-        component: Hello
+        redirect: function() {
+            if (!hello.isLogin()) {
+                return '/login';
+            }
+        },
+        component: hello
+    }, {
+        path: '/login',
+        name: 'login',
+        component: login
     }]
 })

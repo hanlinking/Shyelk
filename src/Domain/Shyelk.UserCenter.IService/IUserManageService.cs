@@ -12,5 +12,6 @@ namespace Shyelk.UserCenter.IService
         ///</summary>
         Task<ClaimsIdentity> LoginAsync(LoginDto dto);
         Task<bool>  CreateAsync(UserDto dto);
+        Task<UserDto> GetUserByName(string userName);
     }
 }

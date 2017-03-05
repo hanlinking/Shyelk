@@ -9,7 +9,7 @@ namespace Shyelk.UserCenter.Models
     {
         public string Account { get; set; }
         public string Password { get; set; }
-        public string IsRemeber { get; set; }
+        public string IsRemember { get; set; }
         public string VerifyCode { get; set; }
     }
 }
