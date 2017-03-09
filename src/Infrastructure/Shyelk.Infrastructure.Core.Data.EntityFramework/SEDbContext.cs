@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Runtime.Loader;
 using Shyelk.Infrastructure.Core.Reflection;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Shyelk.Infrastructure.Core.Data.EntityFramework
 {
@@ -33,7 +34,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
                     case DatabaseType.Sqlserver:
                         optionsBuilder.UseSqlServer(ConnectionString);
                         break;
-                    case DatabaseType.Sqllite:
+                    case DatabaseType.Sqlite:
                         optionsBuilder.UseSqlite(ConnectionString);
                         break;
                     case DatabaseType.MySql:
@@ -45,11 +46,52 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
                 }
             }
         }
+        public string GetTableName(Type type)
+        {
+            string name = string.Empty;
+            switch (Type)
+            {
+                case DatabaseType.Sqlserver:
+                    name = this.Model.FindEntityType(type).SqlServer().TableName;
+                    break;
+                case DatabaseType.Sqlite:
+                    name = this.Model.FindEntityType(type).Sqlite().TableName;
+                    break;
+                case DatabaseType.MySql:
+                    name = this.Model.FindEntityType(type).MySql().TableName;
+                    break;
+                default:
+                    name = this.Model.FindEntityType(type).SqlServer().TableName;
+                    break;
+            }
+            return name;
+        }
+        public string GetColumnName(Type type, string propertyName)
+        {
+            string name = string.Empty;
+            IEntityType entityType = this.Model.FindEntityType(type);
+            switch (Type)
+            {
+                case DatabaseType.Sqlserver:
+                    name=entityType.FindProperty(propertyName)?.SqlServer().ColumnName;
+                    break;
+                case DatabaseType.Sqlite:
+                    name=entityType.FindProperty(propertyName)?.Sqlite().ColumnName;
+                    break;
+                case DatabaseType.MySql:
+                    name=entityType.FindProperty(propertyName)?.MySql().ColumnName;
+                    break;
+                default:
+                    name=entityType.FindProperty(propertyName)?.SqlServer().ColumnName;
+                    break;
+            }
+            return name;
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             string assemblyPath = string.Empty;
             IEnumerable<Type> types = null;
-            if (MapperAssembly!=null&&MapperAssembly.Length>0)
+            if (MapperAssembly != null && MapperAssembly.Length > 0)
             {
                 types = ReflectionTools.GetSubTypes<EntityTypeCofiguration>(MapperAssembly);
             }

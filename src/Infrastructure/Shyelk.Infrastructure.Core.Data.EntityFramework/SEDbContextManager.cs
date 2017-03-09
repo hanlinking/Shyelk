@@ -73,6 +73,6 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
     {
         Sqlserver = 0,
         MySql = 1,
-        Sqllite = 2
+        Sqlite = 2
     }
 }

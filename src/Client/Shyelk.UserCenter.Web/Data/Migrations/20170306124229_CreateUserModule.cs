@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shyelk.UserCenter.Web.Migrations
 {
-    public partial class initial : Migration
+    public partial class CreateUserModule : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,7 +23,7 @@ namespace Shyelk.UserCenter.Web.Migrations
                     Sys_ModifyTime = table.Column<DateTime>(nullable: true),
                     Sys_ModifyTimeUtc = table.Column<DateTime>(nullable: true),
                     Sys_Status = table.Column<bool>(nullable: false),
-                    Sys_Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    Sys_Timestamp = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
                 },
                 constraints: table =>
@@ -52,7 +52,7 @@ namespace Shyelk.UserCenter.Web.Migrations
                     Sys_ModifyTime = table.Column<DateTime>(nullable: true),
                     Sys_ModifyTimeUtc = table.Column<DateTime>(nullable: true),
                     Sys_Status = table.Column<bool>(nullable: false),
-                    Sys_Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    Sys_Timestamp = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true),
                     UserName = table.Column<string>(maxLength: 50, nullable: false)
                 },
@@ -78,7 +78,7 @@ namespace Shyelk.UserCenter.Web.Migrations
                     Sys_ModifyTime = table.Column<DateTime>(nullable: true),
                     Sys_ModifyTimeUtc = table.Column<DateTime>(nullable: true),
                     Sys_Status = table.Column<bool>(nullable: false),
-                    Sys_Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    Sys_Timestamp = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true),
                     SystemId = table.Column<Guid>(nullable: false),
                     SystemName = table.Column<string>(maxLength: 50, nullable: false),
@@ -109,7 +109,7 @@ namespace Shyelk.UserCenter.Web.Migrations
                     Sys_ModifyTime = table.Column<DateTime>(nullable: true),
                     Sys_ModifyTimeUtc = table.Column<DateTime>(nullable: true),
                     Sys_Status = table.Column<bool>(nullable: false),
-                    Sys_Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    Sys_Timestamp = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGeneratedOnAddOrUpdate", true)
                 },
                 constraints: table =>

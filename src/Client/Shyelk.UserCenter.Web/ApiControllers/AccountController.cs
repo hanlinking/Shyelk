@@ -30,6 +30,12 @@ namespace Shyelk.UserCenter.Web.ApiControllers
             return Ok(result);
         }
         [HttpGet]
+        [Route("SetHeader")]
+        public IActionResult SetHeader()
+        {
+            return Ok();
+        }
+        [HttpGet]
         [Route("GetUser")]
         public async Task<IActionResult> GetUser()
         {

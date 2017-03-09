@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
+using System;
+using Shyelk.Infrastructure.Core.Data.EntityFramework.Extensions;
 
 namespace Shyelk.UserCenter.Service
 {
@@ -38,7 +40,7 @@ namespace Shyelk.UserCenter.Service
                        User user = _mapper.Map<User>(dto);
                        _logger.LogDebug(JsonConvert.SerializeObject(user));
                        var pwmd5 = MD5Tools.MD5Encrypt32(dto.Password);
-                       var scmd5 = StringGenerator.GetMixString(32);
+                       var scmd5 = Guid.NewGuid().ToString("N");
                        var pwdHash = MD5Tools.MD5Encrypt64(pwmd5 + scmd5);
                        user.PasswordHash = pwdHash;
                        user.SecurityCode = scmd5;
@@ -57,6 +59,7 @@ namespace Shyelk.UserCenter.Service
 
         public Task<UserDto> GetUserByName(string userName)
         {
+           var result= _userRepository.Query.Where(u=>u.UserName==userName).ToSql();
             return Task.FromResult<UserDto>(_userRepository.Query.Where(u => u.UserName == userName).ProjectTo<UserDto>().FirstOrDefault());
         }
 

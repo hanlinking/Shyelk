@@ -46,5 +46,11 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         /// <param name="entity">实体</param>
         /// <param name="param">部分要更新的属性名称(该参数不传值，则默认更新所有字段)</param>
         void Update(TEntity entity,params string[] properties);
+        /// <summary>
+        /// 按条件更新数据
+        /// </summary>
+        /// <param name="filter">过滤器</param>
+        /// <param name="expression">需要更新的属性表达式</param>
+        void Update(Expression<Func<TEntity,bool>> filter,Expression<Func<TEntity,TEntity>> expression);
     }
 }

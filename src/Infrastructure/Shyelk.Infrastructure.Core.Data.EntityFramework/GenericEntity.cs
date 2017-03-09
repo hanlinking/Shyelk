@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Shyelk.Infrastructure.Core.Converter;
@@ -44,8 +45,9 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         /// <summary>
         /// 时间戳
         /// </summary>
-        [Timestamp]
-        public virtual byte[] Sys_Timestamp { get; set; }
+        [ConcurrencyCheck]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public virtual DateTime Sys_Timestamp { get; set; }
     }
     public abstract class GenericEntity : GenericEntity<string>
     {

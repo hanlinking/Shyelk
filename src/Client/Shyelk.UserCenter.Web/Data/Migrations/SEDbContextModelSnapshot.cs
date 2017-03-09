@@ -46,7 +46,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -95,7 +95,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -146,7 +146,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -185,7 +185,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 

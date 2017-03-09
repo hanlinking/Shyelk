@@ -8,8 +8,8 @@ using Shyelk.Infrastructure.Core.Data.EntityFramework;
 namespace Shyelk.UserCenter.Web.Migrations
 {
     [DbContext(typeof(SEDbContext))]
-    [Migration("20170217170014_initial")]
-    partial class initial
+    [Migration("20170306124229_CreateUserModule")]
+    partial class CreateUserModule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,7 +47,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -96,7 +96,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -147,7 +147,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -186,7 +186,7 @@ namespace Shyelk.UserCenter.Web.Migrations
 
                     b.Property<bool>("Sys_Status");
 
-                    b.Property<byte[]>("Sys_Timestamp")
+                    b.Property<DateTime>("Sys_Timestamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
