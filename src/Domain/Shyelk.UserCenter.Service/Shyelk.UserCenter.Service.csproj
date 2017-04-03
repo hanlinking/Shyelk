@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Shyelk.UserCenter.Service</AssemblyName>
+    <PackageId>Shyelk.UserCenter.Service</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shyelk.UserCenter.Entity\Shyelk.UserCenter.Entity.csproj" />
+    <ProjectReference Include="..\Shyelk.UserCenter.IService\Shyelk.UserCenter.IService.csproj" />
+    <ProjectReference Include="..\Shyelk.UserCenter.Models\Shyelk.UserCenter.Models.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Security\Shyelk.Infrastructure.Core.Security.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Caching.Redis\Shyelk.Infrastructure.Core.Caching.Redis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NETCore.MailKit" Version="1.0.1" />
+    <PackageReference Include="AutoMapper" Version="5.2.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Shyelk.UserCenter.IService</AssemblyName>
+    <PackageId>Shyelk.UserCenter.IService</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core\Shyelk.Infrastructure.Core.csproj" />
+    <ProjectReference Include="..\Shyelk.UserCenter.Models\Shyelk.UserCenter.Models.csproj" />
+  </ItemGroup>
+
+</Project>

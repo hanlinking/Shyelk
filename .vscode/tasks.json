@@ -17,7 +17,7 @@
             "taskName": "build UserCenter",
             "args": [
                 "build",
-                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter\\project.json"
+                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter\\Shyelk.UserCenter.csproj"
             ],
             "isBuildCommand": true,
             "suppressTaskName": true,
@@ -27,7 +27,7 @@
             "taskName": "build UserCenter.Web",
             "args": [
                 "build",
-                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.Web\\project.json"
+                "${workspaceRoot}\\src\\Client\\Shyelk.UserCenter.Web\\Shyelk.UserCenter.Web.csproj"
             ],
             "isBuildCommand": true,
             "suppressTaskName": true,

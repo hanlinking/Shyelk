@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Shyelk.UserCenter.Entity</AssemblyName>
+    <PackageId>Shyelk.UserCenter.Entity</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Data.EntityFramework\Shyelk.Infrastructure.Core.Data.EntityFramework.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -113,22 +113,40 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
             {
                 throw new ArgumentException("expression must be inherit from typeof MemberInitExpression", nameof(expression));
             }
+            TEntity entity=Activator.CreateInstance(typeof(TEntity)) as TEntity;
+            DbSet.Attach(entity);
             List<object> values = new List<object>();
             List<string> propertyName = new List<string>();
-            foreach (MemberAssignment item in exp.Bindings)
+            foreach (MemberAssignment item in exp.Bindings.Cast<MemberAssignment>())
             {
-                ConstantExpression cexp = item.Expression as ConstantExpression;
-                values.Add(cexp.Value);
+                values.Add(Evaluate(item.Expression));
                 MemberInfo memberinfo = item.Member;
                 propertyName.Add(_dbContext.GetColumnName(typeof(TEntity),memberinfo.Name));
             }
-            DbConnection connection = _dbContext.Database.GetDbConnection();
-            var tablename = _dbContext.GetTableName(typeof(TEntity));
-            StringBuilder SqlString = new StringBuilder();
-            string sql= DbSet.Where(filter).ToSql();
-            SqlString.Append("Update from " + tablename);
             
             throw new NotImplementedException();
+        }
+      private object Evaluate(Expression expr)
+        {
+            switch (expr.NodeType)
+            {
+                case ExpressionType.Constant:
+                    return ((ConstantExpression)expr).Value;
+                case ExpressionType.MemberAccess:
+                    var me = (MemberExpression)expr;
+                    object target = Evaluate(me.Expression);
+                    switch (me.Member.MemberType)
+                    {
+                        case System.Reflection.MemberTypes.Field:
+                            return ((FieldInfo)me.Member).GetValue(target);
+                        case System.Reflection.MemberTypes.Property:
+                            return ((PropertyInfo)me.Member).GetValue(target, null);
+                        default:
+                            throw new NotSupportedException(me.Member.MemberType.ToString());
+                    }
+                default:
+                    throw new NotSupportedException(expr.NodeType.ToString());
+            }
         }
     }
 }
