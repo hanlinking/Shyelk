@@ -13,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Shyelk.UserCenter.OAuthTokenProvider;
 using Shyelk.UserCenter.Entity;
+using Shyelk.Infrastructure.Core.Caching.Redis;
 
 namespace Shyelk.UserCenter
 {
@@ -39,7 +39,7 @@ namespace Shyelk.UserCenter
             //var rlt = typeof(BaseEntity<Guid>).IsAssignableFrom(typeof(User));
             // Add framework services.
             services.AddRedisCache(Configuration.GetSection("redisConnection"));
-            services.Configure<TokenProviderOptions>(Configuration.GetSection("TokenProviderOptions"));
+            //services.Configure<TokenProviderOptions>(Configuration.GetSection("TokenProviderOptions"));
             services.AddMvc();
         }
 

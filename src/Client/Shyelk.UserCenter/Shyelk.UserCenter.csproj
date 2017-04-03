@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core\Shyelk.Infrastructure.Core.csproj" />
     <ProjectReference Include="..\..\Domain\Shyelk.UserCenter.Entity\Shyelk.UserCenter.Entity.csproj" />
     <ProjectReference Include="..\..\Domain\Shyelk.UserCenter.Repository\Shyelk.UserCenter.Repository.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Caching.redis\Shyelk.Infrastructure.Core.Caching.redis.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Data.EntityFramework\Shyelk.Infrastructure.Core.Data.EntityFramework.csproj" />
   </ItemGroup>
 

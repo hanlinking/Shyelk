@@ -126,7 +126,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
             
             throw new NotImplementedException();
         }
-      private object Evaluate(Expression expr)
+        private object Evaluate(Expression expr)
         {
             switch (expr.NodeType)
             {
@@ -134,16 +134,29 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
                     return ((ConstantExpression)expr).Value;
                 case ExpressionType.MemberAccess:
                     var me = (MemberExpression)expr;
-                    object target = Evaluate(me.Expression);
+                    object target = null;
+                    object[] argu=null;
+                    if (me.Expression!=null)
+                    {
+                        target=Evaluate(me.Expression);
+                    }else
+                    {
+                       target= Activator.CreateInstance(me.Type);
+                    }
                     switch (me.Member.MemberType)
                     {
                         case System.Reflection.MemberTypes.Field:
                             return ((FieldInfo)me.Member).GetValue(target);
                         case System.Reflection.MemberTypes.Property:
-                            return ((PropertyInfo)me.Member).GetValue(target, null);
+                            var val= ((PropertyInfo)me.Member).GetValue(target, argu);
+                            return val;
                         default:
                             throw new NotSupportedException(me.Member.MemberType.ToString());
                     }
+                case ExpressionType.Convert:
+                    var convertexp=(System.Linq.Expressions.UnaryExpression)expr;
+                    var result=  Evaluate(convertexp.Operand);
+                    return result;
                 default:
                     throw new NotSupportedException(expr.NodeType.ToString());
             }
