@@ -1,0 +1,13 @@
+{
+    "name": "shyelk.webback",
+    "description": "This is a web manage application",
+    "main": "",
+    "authors": [
+        "henry <hanlinprince@163.com>"
+    ],
+    "private": true,
+    "dependencies": {
+        "Font-Awesome": "4.7.0",
+        "bootstrap": "3.3.6"
+    }
+}

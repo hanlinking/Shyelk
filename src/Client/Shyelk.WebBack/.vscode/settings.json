@@ -1,0 +1,8 @@
+{
+    // "emmet.syntaxProfiles": {
+    //     "vue-html": "html",
+    //     "vue": "html"
+    // }
+    "node-module-intellisense.scanDevDependencies": false,
+    "node-module-intellisense.scanBuiltinModules": false
+}
