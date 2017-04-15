@@ -11,8 +11,6 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
     {
         private SEDbContextManager() { }
         private static IDictionary<string, SEDbContextConfig> _dbContextConfigMap = new Dictionary<string, SEDbContextConfig>();
-        [ThreadStaticAttribute]
-        private static List<SEDbContextStorge> SEDbContextStorgeList;
         private static AsyncLocal<List<SEDbContextStorge>> _asyncLocalStorge=new AsyncLocal<List<SEDbContextStorge>>();
         public static void Initial(string connectionName, string connectionString, DatabaseType type, string[] assemblyNames)
         {

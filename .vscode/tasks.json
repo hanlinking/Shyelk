@@ -37,7 +37,7 @@
             "taskName": "build ConsoleApp",
             "args": [
                 "build",
-                "${workspaceRoot}\\src\\Client\\Shyelk.ConsoleApp\\project.json"
+                "${workspaceRoot}\\src\\Client\\Shyelk.ConsoleApp\\Shyelk.ConsoleApp.csproj"
             ],
             "isBuildCommand": true,
             "suppressTaskName": true,

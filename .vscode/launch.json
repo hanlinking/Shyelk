@@ -9,6 +9,7 @@
             "args": [],
             "cwd": "${workspaceRoot}/src/Client/Shyelk.WebSite",
             "stopAtEntry": false,
+            "requireExactSource": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
                 "enabled": true,
@@ -40,6 +41,7 @@
             "args": [],
             "cwd": "${workspaceRoot}/src/Client/Shyelk.UserCenter",
             "stopAtEntry": false,
+            "requireExactSource": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
                 "enabled": true,
@@ -71,6 +73,7 @@
             "args": [],
             "cwd": "${workspaceRoot}/src/Client/Shyelk.UserCenter.Web",
             "stopAtEntry": false,
+            "requireExactSource": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
                 "enabled": true,
@@ -103,6 +106,8 @@
             "cwd": "${workspaceRoot}/src/Client/Shyelk.ConsoleApp",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
+            "requireExactSource": false,
+            "justMyCode": false,
             "launchBrowser": {
                 "enabled": true,
                 "args": "${auto-detect-url}",

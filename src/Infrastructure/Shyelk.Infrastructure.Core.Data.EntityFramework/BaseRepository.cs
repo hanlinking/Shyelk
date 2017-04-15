@@ -17,7 +17,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
     where TEntity : BaseEntity<Tkey>
     {
         protected readonly SEDbContext _dbContext;
-        private readonly DbSet<TEntity> _DbSet;
+        private DbSet<TEntity> _DbSet;
         public BaseRepository(string name)
         {
             _dbContext = SEDbContextManager.GetDbContext(name);
@@ -26,7 +26,17 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
         {
             _dbContext = SEDbContextManager.GetDbContext();
         }
-        protected virtual DbSet<TEntity> DbSet { get { return _DbSet ?? _dbContext.Set<TEntity>(); } }
+        protected virtual DbSet<TEntity> DbSet
+        {
+            get
+            {
+                if (_DbSet==null)
+                {
+                    _DbSet=_dbContext.Set<TEntity>();
+                }
+                return _DbSet;
+            }
+        }
 
         public virtual IQueryable<TEntity> Query { get { return DbSet as IQueryable<TEntity>; } }
 
@@ -113,7 +123,7 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
             {
                 throw new ArgumentException("expression must be inherit from typeof MemberInitExpression", nameof(expression));
             }
-            TEntity entity=Activator.CreateInstance(typeof(TEntity)) as TEntity;
+            TEntity entity = Activator.CreateInstance(typeof(TEntity)) as TEntity;
             DbSet.Attach(entity);
             List<object> values = new List<object>();
             List<string> propertyName = new List<string>();
@@ -121,9 +131,9 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
             {
                 values.Add(Evaluate(item.Expression));
                 MemberInfo memberinfo = item.Member;
-                propertyName.Add(_dbContext.GetColumnName(typeof(TEntity),memberinfo.Name));
+                propertyName.Add(_dbContext.GetColumnName(typeof(TEntity), memberinfo.Name));
             }
-            
+
             throw new NotImplementedException();
         }
         private object Evaluate(Expression expr)
@@ -135,27 +145,28 @@ namespace Shyelk.Infrastructure.Core.Data.EntityFramework
                 case ExpressionType.MemberAccess:
                     var me = (MemberExpression)expr;
                     object target = null;
-                    object[] argu=null;
-                    if (me.Expression!=null)
+                    object[] argu = null;
+                    if (me.Expression != null)
                     {
-                        target=Evaluate(me.Expression);
-                    }else
+                        target = Evaluate(me.Expression);
+                    }
+                    else
                     {
-                       target= Activator.CreateInstance(me.Type);
+                        target = Activator.CreateInstance(me.Type);
                     }
                     switch (me.Member.MemberType)
                     {
                         case System.Reflection.MemberTypes.Field:
                             return ((FieldInfo)me.Member).GetValue(target);
                         case System.Reflection.MemberTypes.Property:
-                            var val= ((PropertyInfo)me.Member).GetValue(target, argu);
+                            var val = ((PropertyInfo)me.Member).GetValue(target, argu);
                             return val;
                         default:
                             throw new NotSupportedException(me.Member.MemberType.ToString());
                     }
                 case ExpressionType.Convert:
-                    var convertexp=(System.Linq.Expressions.UnaryExpression)expr;
-                    var result=  Evaluate(convertexp.Operand);
+                    var convertexp = (System.Linq.Expressions.UnaryExpression)expr;
+                    var result = Evaluate(convertexp.Operand);
                     return result;
                 default:
                     throw new NotSupportedException(expr.NodeType.ToString());
