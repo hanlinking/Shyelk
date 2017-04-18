@@ -41,13 +41,19 @@ namespace Shyelk.UserCenter.Web.ApiControllers
         {
             try
             {
-              var result = await this._userManageService.GetUserByName("TEST");
-              return Ok(result);
+                var result = await this._userManageService.GetUserByName("TEST");
+                return Ok(result);
             }
             catch (System.Exception)
             {
                 return BadRequest();
             }
+        }
+        [HttpGet]
+        [Route("GetVerficationCode")]
+        public IActionResult VerificationCode()
+        {
+            return Ok(this._userManageService.GetVerficationCode());
         }
     }
 }

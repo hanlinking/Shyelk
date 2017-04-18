@@ -2,16 +2,20 @@ using Shyelk.UserCenter.IService;
 using Shyelk.UserCenter.Entity;
 using Shyelk.Infrastructure.Core.Data.EntityFramework;
 using Shyelk.Infrastructure.Core.Security;
+using Shyelk.UserCenter.Models;
+using Shyelk.Tools.Drawing;
+using Shyelk.Infrastructure.Core.Data.EntityFramework.Extensions;
+using Shyelk.Infrastructure.Core.Converter;
+using Shyelk.Infrastructure.Core.Caching.Redis;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Security.Claims;
-using Shyelk.UserCenter.Models;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
 using System;
-using Shyelk.Infrastructure.Core.Data.EntityFramework.Extensions;
+
 
 namespace Shyelk.UserCenter.Service
 {
@@ -21,13 +25,16 @@ namespace Shyelk.UserCenter.Service
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IRedisCache _redisCache;
         private IUnitOfWork _unitOfWork;
-        public UserManagerService(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper, ILoggerFactory loggerFactory)
+        private const string V_CODE_FORMAT = "0000000-V_CODE:{0}";
+        public UserManagerService(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper, IRedisCache redisCache, ILoggerFactory loggerFactory)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _unitOfWork = new SEUnitOfWork();
             _mapper = mapper;
+            _redisCache = redisCache;
             _logger = loggerFactory.CreateLogger(nameof(UserManagerService));
         }
 
@@ -59,8 +66,23 @@ namespace Shyelk.UserCenter.Service
 
         public Task<UserDto> GetUserByName(string userName)
         {
-           var result= _userRepository.Query.Where(u=>u.UserName==userName).ToSql();
+            var result = _userRepository.Query.Where(u => u.UserName == userName).ToSql();
             return Task.FromResult<UserDto>(_userRepository.Query.Where(u => u.UserName == userName).ProjectTo<UserDto>().FirstOrDefault());
+        }
+
+        public VerficateCode GetVerficationCode()
+        {
+            string code = StringGenerator.GetMixString(4);
+            byte[] image = VerificationCode.Generate(code, DrawFormat.Png);
+            VerficateCode vcode = new VerficateCode();
+            vcode.Image = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(image));
+            vcode.AntiForgetCode = Guid.NewGuid().ToShortGuidString().ToLower();
+            Task.Factory.StartNew(() =>
+            {
+                string key = string.Format(V_CODE_FORMAT, vcode.AntiForgetCode);
+                _redisCache.Set(key,code,TimeSpan.FromMinutes(5));
+            });
+            return vcode;
         }
 
         public Task<ClaimsIdentity> LoginAsync(LoginDto dto)
@@ -72,7 +94,7 @@ namespace Shyelk.UserCenter.Service
             }
             string pwmd5 = MD5Tools.MD5Encrypt32(dto.Password);
             string pwdHash = MD5Tools.MD5Encrypt64(pwmd5 + user.SecurityCode);
-            if (pwdHash==user.PasswordHash)
+            if (pwdHash == user.PasswordHash)
             {
                 return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(dto.Account, "Token"), new Claim[] { }));
             }

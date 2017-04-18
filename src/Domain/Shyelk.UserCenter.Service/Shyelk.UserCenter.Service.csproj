@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Shyelk.UserCenter.Entity\Shyelk.UserCenter.Entity.csproj" />
     <ProjectReference Include="..\Shyelk.UserCenter.IService\Shyelk.UserCenter.IService.csproj" />
     <ProjectReference Include="..\Shyelk.UserCenter.Models\Shyelk.UserCenter.Models.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Shyelk.Tools\Shyelk.Tools.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Security\Shyelk.Infrastructure.Core.Security.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Shyelk.Infrastructure.Core.Caching.Redis\Shyelk.Infrastructure.Core.Caching.Redis.csproj" />
   </ItemGroup>

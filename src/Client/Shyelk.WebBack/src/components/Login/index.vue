@@ -23,9 +23,9 @@
                            class="form-control"
                            v-model="verifycode"
                            placeholder="验证码">
-                    <div class="input-group-addon verify-code-container">
+                    <div class="input-group-addon verify-code-container" v-on:click="refresh">
                         <img class="verify-code-img"
-                             src="data:image/png;base64,R0lGODlhNAAVAPcAAAAAAAAAMwAAZgAAmQAAzAAA/wArAAArMwArZgArmQArzAAr/wBVAABVMwBVZgBVmQBVzABV/wCAAACAMwCAZgCAmQCAzACA/wCqAACqMwCqZgCqmQCqzACq/wDVAADVMwDVZgDVmQDVzADV/wD/AAD/MwD/ZgD/mQD/zAD//zMAADMAMzMAZjMAmTMAzDMA/zMrADMrMzMrZjMrmTMrzDMr/zNVADNVMzNVZjNVmTNVzDNV/zOAADOAMzOAZjOAmTOAzDOA/zOqADOqMzOqZjOqmTOqzDOq/zPVADPVMzPVZjPVmTPVzDPV/zP/ADP/MzP/ZjP/mTP/zDP//2YAAGYAM2YAZmYAmWYAzGYA/2YrAGYrM2YrZmYrmWYrzGYr/2ZVAGZVM2ZVZmZVmWZVzGZV/2aAAGaAM2aAZmaAmWaAzGaA/2aqAGaqM2aqZmaqmWaqzGaq/2bVAGbVM2bVZmbVmWbVzGbV/2b/AGb/M2b/Zmb/mWb/zGb//5kAAJkAM5kAZpkAmZkAzJkA/5krAJkrM5krZpkrmZkrzJkr/5lVAJlVM5lVZplVmZlVzJlV/5mAAJmAM5mAZpmAmZmAzJmA/5mqAJmqM5mqZpmqmZmqzJmq/5nVAJnVM5nVZpnVmZnVzJnV/5n/AJn/M5n/Zpn/mZn/zJn//8wAAMwAM8wAZswAmcwAzMwA/8wrAMwrM8wrZswrmcwrzMwr/8xVAMxVM8xVZsxVmcxVzMxV/8yAAMyAM8yAZsyAmcyAzMyA/8yqAMyqM8yqZsyqmcyqzMyq/8zVAMzVM8zVZszVmczVzMzV/8z/AMz/M8z/Zsz/mcz/zMz///8AAP8AM/8AZv8Amf8AzP8A//8rAP8rM/8rZv8rmf8rzP8r//9VAP9VM/9VZv9Vmf9VzP9V//+AAP+AM/+AZv+Amf+AzP+A//+qAP+qM/+qZv+qmf+qzP+q///VAP/VM//VZv/Vmf/VzP/V////AP//M///Zv//mf//zP///wAAAAAAAAAAAAAAACH5BAEAAPwALAAAAAA0ABUAAAj/ADNlIiaQ4MCCCA8qNMgwYcOFDgXum0ixosWLGDGambgx40SJFTt63Cdy5L4zJi2CLJmypcuKICeyQdmSZUqaHmNSlHdmppk2Zs64iUYR2BmgaIhO1AcJaM8zoSoydcpmE0WdE/OdMRP14lQ4++YB7SqP60SebMDuQ2s13yUzbz5musizjSaMZZPu0xdMKFFkSvdC8rvPqN59fduEMqNprkV5QO94DdbmcLCgXaVeOhOXb5szpyYaPUMUa9igPqEuHUx6Yryjdy2u29pV2M800TyrNX2S4rGeYPNFIryP3ViK+Zr+DLxvdlA3kDLzljo4qVgzuCf+PmPn4rygcfdasUrKt2f46RT1fWYTSp+uykrZYrysmClnime2xtmHvugZvW+lUdRxFpXHlXBtvBHfZ92ZNoxI+hylV37sTXRZdsMExhcbuLVRXXxBgcKfYxUBo9hGRpkl3hlg1RWVPsAcZptqa/Vk1VTnkYhcUJ8leJGJP7U20XdbbaVgRcL99JNVcr3kZEgu9ffklCrpSBKVFeH0ZCaaDNNYJl4qBKZAYwo0DJkGkUlmlwKxqeaXaGYSEAA7" />
+                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAeCAYAAAC7Q5mxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJqSURBVGhD7ZjLjYMwEIYpj4JcQO5pgQOXlMCZUyQK2FsuKAVESgXeHz/IGOz4tRA28ieNtDgWg3/mxVa8kEURMJMiYCZFwEwcAj540555dbZYO/BR7Sq8E7A7olA95xc88tKuWP8Q8G7jxll3U38fhJ/aLt5s+P2p9u4IPNs4mIDP5iXUXa3NIE869VuHfTuzk4DkkNpiDquj78dVVMj9VwJrUJZq1PBKWT2VKJxTX8NYQiWAR85P1UlczDwGzoYHH4fWaCA11qK5M1M4wwLTzisgCNkz0XcQq5uqqQLCsvR6D48OAdvWFAxrdbSIpOgbhZ6sXyCwD5rCPoG8yEisG3mOsel4k3FLPJFFQNDf1iksI5K+PQ86KqxdkogYIoorkp0p+4YRwVC1vOkRKErIVPAEdgGtiCiE41CfV88htcAp9XBlWI/owmODYBB1MA943kpAPJqvsOvUzOme+iVFitgz2Th0KqcCr2sBnal6RAE1MdGMRiKEE6kcUZIsCAEnqIh9h7dj+WQTwsZ8yunocH0pBB1a10pfs1H7vAJidGGv+i5SmVzHAo8SIwpvaPXLCBRrmJVifNHuaYhIonMyXxPRL+LdvsBo7hkyyLiNnAVTZsAJeJSs6yBuTGbAKqZ5UJxFn5ivk9IObBMoZMwR85+se6850BykU+ohPEqCG0kK9IDa7irlQubAiZAX8YF/KsCrZFMBbfjqo5VF6s8W3n3/GniX7CrgnJKB0Xdg9heQ1rOUr4iDsZ+AyzqY/U17DLYXcFn8Qwbdf8T2Aupm8WXCaWYBJ3ZtJF9CETCTImAmRcBMioBZcP4LIsbnMrQOZdUAAAAASUVORK5CYII=" />
                     </div>
                 </div>
                 <div class="login-form-group">
@@ -62,7 +62,8 @@ export default {
             username: "",
             password: "",
             isremember: false,
-            verifycode: ""
+            verifycode: "",
+            antiforgetcode:""
         }
     },
     methods: {
@@ -70,13 +71,22 @@ export default {
             this.username = "asdasdasd";
             this.password = "luhanlin1";
             this.isremember = true;
-            this.verifycode = "asdas";
+            this.verifycode = "";
             NetUtils.ajax();
             // router.push('Main')
+        },
+        refresh:function (e) {
+            this.antiforgetcode=""
+            alert("asdasd");
         }
     },
     created: function (e) {
         var islogin = securityModule.checkLogin()
+        if(islogin){
+            // router.push('Main');
+        }else{
+            this.refresh(e);
+        }
     },
     components: {
         footerbar

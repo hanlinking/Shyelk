@@ -8,12 +8,22 @@ using System.Threading.Tasks;
 
 namespace Shyelk.Tools.Drawing
 {
-    public static class VerificationCode
+    public class VerificationCode
     {
+        private VerificationCode() { }
         private static Color[] color = { Color.Black, Color.Red, Color.DarkBlue, Color.Green, Color.Orange, Color.Brown, Color.DarkCyan, Color.Purple };
         private static string[] fonts = { "Verdana", "Microsoft Sans Serif", "Comic Sans MS", "Arial", "宋体" };
         private static Bitmap bmp;
-        public static byte[] Generate(string chkCode, int codeWidth = 80, int codeHeight = 30, int fontSize = 16)
+        /// <summary>
+        /// 生成验证码图片
+        /// </summary>
+        /// <param name="chkCode">验证码内容</param>
+        /// <param name="imageFormat">图片格式（默认为Png）</param>
+        /// <param name="codeWidth">图片宽度</param>
+        /// <param name="codeHeight">图片高度</param>
+        /// <param name="fontSize">字体大小</param>
+        /// <returns>验证码图片字节流</returns>
+        public static byte[] Generate(string chkCode, DrawFormat imageFormat = DrawFormat.Png, int codeWidth = 80, int codeHeight = 30, int fontSize = 16)
         {
             bmp = new Bitmap(codeWidth, codeHeight);
             Random rnd = new Random();
@@ -47,11 +57,10 @@ namespace Shyelk.Tools.Drawing
                 Color clr = color[rnd.Next(color.Length)];
                 g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
             }
-            //将验证码图片写入内存流，并将其以 "image/Png" 格式输出 
             MemoryStream ms = new MemoryStream();
             try
             {
-                bmp.Save(ms, ImageFormat.Png);
+                bmp.Save(ms,GetImageFormat(imageFormat));
                 return ms.ToArray();
             }
             catch (Exception)
@@ -62,6 +71,22 @@ namespace Shyelk.Tools.Drawing
             {
                 g.Dispose();
                 bmp.Dispose();
+            }
+        }
+        private static ImageFormat GetImageFormat(DrawFormat imageFormat)
+        {
+            switch (imageFormat)
+            {
+                case DrawFormat.Bmp: return System.Drawing.Imaging.ImageFormat.Bmp;
+                case DrawFormat.Emf: return System.Drawing.Imaging.ImageFormat.Emf;
+                case DrawFormat.Exif: return System.Drawing.Imaging.ImageFormat.Exif;
+                case DrawFormat.Gif: return System.Drawing.Imaging.ImageFormat.Gif;
+                case DrawFormat.Icon: return System.Drawing.Imaging.ImageFormat.Icon;
+                case DrawFormat.Jpeg: return System.Drawing.Imaging.ImageFormat.Jpeg;
+                case DrawFormat.MemoryBmp: return System.Drawing.Imaging.ImageFormat.MemoryBmp;
+                case DrawFormat.Tiff: return System.Drawing.Imaging.ImageFormat.Tiff;
+                case DrawFormat.Wmf: return System.Drawing.Imaging.ImageFormat.Wmf;
+                default: return System.Drawing.Imaging.ImageFormat.Png;
             }
         }
     }
