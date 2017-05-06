@@ -16,25 +16,27 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
         // ARGV[3] = relative-expiration (long, in seconds, -1 for none) - Min(absolute-expiration - Now, sliding-expiration)
         // ARGV[4] = data - byte[]
         // this order should not change LUA script depends on it
-        private const string SetScript = (@"
-                redis.call('HMSET', KEYS[1], 'absexp', ARGV[1], 'sldexp', ARGV[2], 'data', ARGV[4])
-                if ARGV[3] ~= '-1' then
-                  redis.call('EXPIRE', KEYS[1], ARGV[3])
-                end
-                return 1");
-        private const string STRSETSCRIPT = @"
+        private const string STR_SET_SCRIPT = @"
             redis.call('SET',KEYS[1],ARGV[1])
             if ARGV[2]~='-1' then
                 redis.call('EXPIRE',KEYS[1],ARGV[2])
             end
             return 1";
-        private const string AbsoluteExpirationKey = "absexp";
-        private const string SlidingExpirationKey = "sldexp";
-        private const string DataKey = "data";
-        private const long NotPresent = -1;
 
         private static ConnectionMultiplexer _connection;
-        protected ConnectionMultiplexer Connection
+
+        private readonly RedisCacheOptions _options;
+        private readonly string _instance;
+        private long GetTimeExpire(TimeSpan? timeExpire)
+        {
+            long time = -1;
+            if (timeExpire.HasValue)
+            {
+                time = (long)Math.Floor(timeExpire.Value.TotalSeconds);
+            }
+            return time;
+        }
+        protected virtual ConnectionMultiplexer Connection
         {
             get
             {
@@ -49,11 +51,11 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
                 return _connection;
             }
         }
-        private IDatabase _cache;
 
-        private readonly RedisCacheOptions _options;
-        private readonly string _instance;
-
+        protected virtual IDatabase _cache
+        {
+            get { return Connection.GetDatabase(); }
+        }
         public RedisCache(IOptions<RedisCacheOptions> optionsAccessor)
         {
             if (optionsAccessor == null)
@@ -67,34 +69,8 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             _instance = _options.InstanceName ?? string.Empty;
         }
 
-        private void Connect()
-        {
-            lock (this)
-            {
-                _cache = Connection.GetDatabase();
-            }
-        }
-
-        private async Task ConnectAsync()
-        {
-            if (_connection == null)
-            {
-                try
-                {
-                    _connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
-                }
-                catch (RedisConnectionException ex)
-                {
-                    throw ex;
-                }
-
-            }
-            _cache = _connection.GetDatabase();
-        }
-
         public IDatabase GetDatabase(int db = -1, object asyncState = null)
         {
-            Connect();
             return _cache;
         }
 
@@ -105,7 +81,6 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            Connect();
             RedisValue result = _cache.StringGet(key);
             return result;
         }
@@ -116,22 +91,13 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            Connect();
-            RedisResult result = _cache.ScriptEvaluate(STRSETSCRIPT, new RedisKey[] { key }, new RedisValue[]{
+            RedisResult result = _cache.ScriptEvaluate(STR_SET_SCRIPT, new RedisKey[] { key }, new RedisValue[]{
                     value,
                     GetTimeExpire(keyTimeExpire)
             });
             return !result.IsNull;
         }
-        private long GetTimeExpire(TimeSpan? timeExpire)
-        {
-            long time = -1;
-            if (timeExpire.HasValue)
-            {
-                time = (long)Math.Floor(timeExpire.Value.TotalSeconds);
-            }
-            return time;
-        }
+
         public Task<string> GetAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (cancellationToken != null)
@@ -144,7 +110,6 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                Connect();
                 RedisValue result = _cache.StringGet(key);
                 return (string)result;
             }, cancellationToken);
@@ -162,13 +127,110 @@ namespace Shyelk.Infrastructure.Core.Caching.Redis
             }
             return Task.Factory.StartNew(() =>
             {
-                Connect();
-                RedisResult result = _cache.ScriptEvaluate(STRSETSCRIPT, new RedisKey[] { key }, new RedisValue[]{
+                RedisResult result = _cache.ScriptEvaluate(STR_SET_SCRIPT, new RedisKey[] { key }, new RedisValue[]{
                     value,
                     GetTimeExpire(keyTimeExpire)
                 });
                 return !result.IsNull;
-            },cancellationToken);
+            }, cancellationToken);
         }
+
+        public IDictionary<string, string> HashGet(string key, string[] fields)
+        {
+            return _hashGet(key, fields);
+        }
+
+        public Task<IDictionary<string, string>> HashGetAsync(string key, string[] fields, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (cancellationToken != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            return Task.Factory.StartNew(() =>
+             {
+                 return _hashGet(key, fields);
+             }, cancellationToken);
+        }
+        public IDictionary<string, string> HashGetAll(string key)
+        {
+            return _hashGet(key, null);
+        }
+
+        public Task<IDictionary<string, string>> HashGetAllAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (cancellationToken != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            return Task.Factory.StartNew(() =>
+             {
+                 return _hashGet(key, null);
+             }, cancellationToken);
+        }
+        public bool HashSet(string key, Dictionary<string, string> fields, TimeSpan? keyTimeExpire = default(TimeSpan?))
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            ITransaction trans = _cache.CreateTransaction();
+            trans.HashSetAsync(key, fields.Select(s => new HashEntry(s.Key, s.Value)).ToArray());
+            if (keyTimeExpire.HasValue)
+            {
+                trans.KeyExpireAsync(key, keyTimeExpire.Value);
+            }
+            return trans.Execute();
+        }
+
+        public Task<bool> HashSetAsync(string key, Dictionary<string, string> fields, TimeSpan? keyTimeExpire = default(TimeSpan?), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            if (cancellationToken != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            ITransaction trans = _cache.CreateTransaction();
+            trans.HashSetAsync(key, fields.Select(s => new HashEntry(s.Key, s.Value)).ToArray());
+            if (keyTimeExpire.HasValue)
+            {
+                trans.KeyExpireAsync(key, keyTimeExpire.Value);
+            }
+            return trans.ExecuteAsync();
+        }
+
+        private IDictionary<string, string> _hashGet(string key, string[] fields)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            Dictionary<string, string> result = null;
+            if (fields == null || fields.Count() == 0)
+            {
+                var redisresult = _cache.HashGetAll(key);
+                if (redisresult.Any(r => r.Value.HasValue))
+                {
+                    result = redisresult.ToDictionary(k => (string)k.Name, v => (string)v.Value);
+                }
+            }
+            else
+            {
+                var redisresult = _cache.HashGet(key, fields.Select(s => (RedisValue)s).ToArray());
+                if (redisresult.Any(r => r.HasValue))
+                {
+                    result = new Dictionary<string, string>();
+                    for (int i = 0; i < fields.Count(); i++)
+                    {
+                        result.Add(fields[i], redisresult[i]);
+                    }
+                }
+            }
+            return result;
+        }
+
+
     }
 }

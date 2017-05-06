@@ -3,6 +3,7 @@
         <div class="login">
     
             <form class="login-form">
+                <input type="hidden" v-model="antiforgetcode">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-fw fa-user"></i>账号</span>
                     <input type="text"
@@ -76,7 +77,8 @@ export default {
             // router.push('Main')
         },
         refresh:function (e) {
-            this.antiforgetcode=""
+            //NetUtils.ajax();
+            this.antiforgetcode="asdasd"
             alert("asdasd");
         }
     },
