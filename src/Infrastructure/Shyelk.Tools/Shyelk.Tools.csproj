@@ -1,5 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
     <AssemblyName>Shyelk.Tools</AssemblyName>
@@ -7,9 +7,7 @@
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="ZKWeb.System.Drawing" Version="2.0.1" />
+    <PackageReference Include="ZKWeb.System.Drawing" Version="3.0.0"/>
   </ItemGroup>
-
 </Project>

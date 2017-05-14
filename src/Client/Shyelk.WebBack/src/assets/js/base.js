@@ -1,3 +1,5 @@
+import Config from './config'
+
 var  CHARS  =  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');  
 var baseUtils = { 
     NewUUID: function()  {      
@@ -67,6 +69,20 @@ var baseUtils = { 
     ArrayRemove: function(array, index) {
         if (isNaN(dx) || dx > this.length) { return false; }  
         this.splice(dx, 1);
+    },
+    GetService: function(code, version) {
+        for (var index = 0; index < Config.ServiceTable.length; index++) {
+            var element = Config.ServiceTable[index];
+            if (element.code == code && element.ver == (version || '1.0')) {
+                return element;
+            }
+        }
+        throw new ExceptionInformation("Service Not Configure");
+    },
+    Log: function(info) {
+        if (Config.Mode == 'dev') {
+            console.log(info);
+        }
     }
 }
 export default baseUtils;

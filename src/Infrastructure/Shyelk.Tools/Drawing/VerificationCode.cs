@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+using System.DrawingCore;
+using System.DrawingCore.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +12,8 @@ namespace Shyelk.Tools.Drawing
     {
         private VerificationCode() { }
         private static Color[] color = { Color.Black, Color.Red, Color.DarkBlue, Color.Green, Color.Orange, Color.Brown, Color.DarkCyan, Color.Purple };
-        private static string[] fonts = { "Verdana", "Microsoft Sans Serif", "Comic Sans MS", "Arial", "宋体" };
+        //private static string[] fonts = { "Verdana", "Microsoft Sans Serif", "Comic Sans MS", "Arial", "宋体" };
+        private static string[] fonts = { "Times New Roman" };
         private static Bitmap bmp;
         /// <summary>
         /// 生成验证码图片
@@ -40,7 +41,7 @@ namespace Shyelk.Tools.Drawing
             Graphics g = Graphics.FromImage(bmp);
             g.Clear(Color.White);
             //画噪线 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 5; i++)
             {
                 int x1 = rnd.Next(codeWidth);
                 int y1 = rnd.Next(codeHeight);
@@ -53,7 +54,8 @@ namespace Shyelk.Tools.Drawing
             for (int i = 0; i < chkCode.Length; i++)
             {
                 string fnt = fonts[rnd.Next(fonts.Length)];
-                Font ft = new Font(fnt, fontSize);
+                Font ft = new Font(fnt, fontSize,FontStyle.Bold);
+                
                 Color clr = color[rnd.Next(color.Length)];
                 g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
             }
@@ -77,16 +79,16 @@ namespace Shyelk.Tools.Drawing
         {
             switch (imageFormat)
             {
-                case DrawFormat.Bmp: return System.Drawing.Imaging.ImageFormat.Bmp;
-                case DrawFormat.Emf: return System.Drawing.Imaging.ImageFormat.Emf;
-                case DrawFormat.Exif: return System.Drawing.Imaging.ImageFormat.Exif;
-                case DrawFormat.Gif: return System.Drawing.Imaging.ImageFormat.Gif;
-                case DrawFormat.Icon: return System.Drawing.Imaging.ImageFormat.Icon;
-                case DrawFormat.Jpeg: return System.Drawing.Imaging.ImageFormat.Jpeg;
-                case DrawFormat.MemoryBmp: return System.Drawing.Imaging.ImageFormat.MemoryBmp;
-                case DrawFormat.Tiff: return System.Drawing.Imaging.ImageFormat.Tiff;
-                case DrawFormat.Wmf: return System.Drawing.Imaging.ImageFormat.Wmf;
-                default: return System.Drawing.Imaging.ImageFormat.Png;
+                case DrawFormat.Bmp: return ImageFormat.Bmp;
+                case DrawFormat.Emf: return ImageFormat.Emf;
+                case DrawFormat.Exif: return ImageFormat.Exif;
+                case DrawFormat.Gif: return ImageFormat.Gif;
+                case DrawFormat.Icon: return ImageFormat.Icon;
+                case DrawFormat.Jpeg: return ImageFormat.Jpeg;
+                case DrawFormat.MemoryBmp: return ImageFormat.MemoryBmp;
+                case DrawFormat.Tiff: return ImageFormat.Tiff;
+                case DrawFormat.Wmf: return ImageFormat.Wmf;
+                default: return ImageFormat.Png;
             }
         }
     }

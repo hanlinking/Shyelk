@@ -10,6 +10,5 @@
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Crypto" Version="*"/>
   </ItemGroup>
 </Project>

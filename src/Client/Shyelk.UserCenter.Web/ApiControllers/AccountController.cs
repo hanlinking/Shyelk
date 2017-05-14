@@ -29,11 +29,19 @@ namespace Shyelk.UserCenter.Web.ApiControllers
             _logger.LogDebug(result.ToString());
             return Ok(result);
         }
+        [HttpPost]
+        [Route("SignIn")]
+        public async Task<IActionResult> SignIn([FromBody] LoginDto dto)
+        {
+            var CheckCode = await this._userManageService.CheckVerficationCodeAsync(dto.AntiForgetCode, dto.VerifyCode);
+            return Ok();
+        }
         [HttpGet]
-        [Route("SetHeader")]
+        [Route("Test")]
         public IActionResult SetHeader()
         {
-            return Ok();
+
+            return Ok("正常");
         }
         [HttpGet]
         [Route("GetUser")]
@@ -51,9 +59,16 @@ namespace Shyelk.UserCenter.Web.ApiControllers
         }
         [HttpGet]
         [Route("GetVerficationCode")]
-        public IActionResult VerificationCode()
+        public IActionResult VerificationCode(string lastid = null)
         {
-            return Ok(this._userManageService.GetVerficationCode());
+            try
+            {
+                return Ok(this._userManageService.GetVerficationCode());
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex);
+            }
         }
     }
 }

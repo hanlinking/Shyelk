@@ -70,8 +70,12 @@ namespace Shyelk.UserCenter.Service
             return Task.FromResult<UserDto>(_userRepository.Query.Where(u => u.UserName == userName).ProjectTo<UserDto>().FirstOrDefault());
         }
 
-        public VerficateCode GetVerficationCode()
+        public VerficateCode GetVerficationCode(string lastid = default(string))
         {
+            if (!string.IsNullOrEmpty(lastid))
+            {
+                _redisCache.GetDatabase().KeyDelete(string.Format(V_CODE_FORMAT, lastid));
+            }
             string code = StringGenerator.GetMixString(4);
             byte[] image = VerificationCode.Generate(code, DrawFormat.Png);
             VerficateCode vcode = new VerficateCode();
@@ -80,7 +84,7 @@ namespace Shyelk.UserCenter.Service
             Task.Factory.StartNew(() =>
             {
                 string key = string.Format(V_CODE_FORMAT, vcode.AntiForgetCode);
-                _redisCache.Set(key,code,TimeSpan.FromMinutes(5));
+                _redisCache.Set(key, code, TimeSpan.FromMinutes(5));
             });
             return vcode;
         }
@@ -102,5 +106,15 @@ namespace Shyelk.UserCenter.Service
 
         }
 
+        public Task<bool> CheckVerficationCodeAsync(string antiForgetCode, string code)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                string key = string.Format(V_CODE_FORMAT, antiForgetCode);
+                var result = _redisCache.Get(key);
+                _redisCache.GetDatabase().KeyDelete(key);
+                return code.Trim() == result;
+            });
+        }
     }
 }

@@ -5,45 +5,33 @@
             <form class="login-form">
                 <input type="hidden" v-model="antiforgetcode">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-fw fa-user"></i>账号</span>
-                    <input type="text"
-                           class="form-control"
-                           v-model="username"
-                           placeholder="账号">
+                    <span class="input-group-addon">
+                        <i class="fa fa-fw fa-user"></i>账号</span>
+                    <input type="text" class="form-control" v-model="username" placeholder="账号">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i>密码</span>
-                    <input type="password"
-                           class="form-control"
-                           v-model="password"
-                           placeholder="密码">
+                    <span class="input-group-addon">
+                        <i class="fa fa-fw fa-lock"></i>密码</span>
+                    <input type="password" class="form-control" v-model="password" placeholder="密码">
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">&nbsp;验证码</span>
-                    <input type="text"
-                           class="form-control"
-                           v-model="verifycode"
-                           placeholder="验证码">
-                    <div class="input-group-addon verify-code-container" v-on:click="refresh">
-                        <img class="verify-code-img"
-                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAeCAYAAAC7Q5mxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJqSURBVGhD7ZjLjYMwEIYpj4JcQO5pgQOXlMCZUyQK2FsuKAVESgXeHz/IGOz4tRA28ieNtDgWg3/mxVa8kEURMJMiYCZFwEwcAj540555dbZYO/BR7Sq8E7A7olA95xc88tKuWP8Q8G7jxll3U38fhJ/aLt5s+P2p9u4IPNs4mIDP5iXUXa3NIE869VuHfTuzk4DkkNpiDquj78dVVMj9VwJrUJZq1PBKWT2VKJxTX8NYQiWAR85P1UlczDwGzoYHH4fWaCA11qK5M1M4wwLTzisgCNkz0XcQq5uqqQLCsvR6D48OAdvWFAxrdbSIpOgbhZ6sXyCwD5rCPoG8yEisG3mOsel4k3FLPJFFQNDf1iksI5K+PQ86KqxdkogYIoorkp0p+4YRwVC1vOkRKErIVPAEdgGtiCiE41CfV88htcAp9XBlWI/owmODYBB1MA943kpAPJqvsOvUzOme+iVFitgz2Th0KqcCr2sBnal6RAE1MdGMRiKEE6kcUZIsCAEnqIh9h7dj+WQTwsZ8yunocH0pBB1a10pfs1H7vAJidGGv+i5SmVzHAo8SIwpvaPXLCBRrmJVifNHuaYhIonMyXxPRL+LdvsBo7hkyyLiNnAVTZsAJeJSs6yBuTGbAKqZ5UJxFn5ivk9IObBMoZMwR85+se6850BykU+ohPEqCG0kK9IDa7irlQubAiZAX8YF/KsCrZFMBbfjqo5VF6s8W3n3/GniX7CrgnJKB0Xdg9heQ1rOUr4iDsZ+AyzqY/U17DLYXcFn8Qwbdf8T2Aupm8WXCaWYBJ3ZtJF9CETCTImAmRcBMioBZcP4LIsbnMrQOZdUAAAAASUVORK5CYII=" />
+                    <input type="text" class="form-control" v-model="verifycode" placeholder="验证码">
+                    <div class="input-group-addon verify-code-container" id="vcode-container" v-on:click="refresh">
+                        <img class="verify-code-img" v-bind:src="image" />
                     </div>
                 </div>
                 <div class="login-form-group">
                     <div style="float:left">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox"
-                                       id="henry"
-                                       value="henry"
-                                       v-model="isremember">记住密码
+                                <input type="checkbox" id="henry" value="henry" v-model="isremember">记住密码
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="login-form-group">
-                    <button v-on:click.prevent="login"
-                            class="btn btn-block btn-primary">登&nbsp;录</button>
+                    <button v-on:click.prevent="login" class="btn btn-block btn-primary">登&nbsp;录</button>
                 </div>
             </form>
         </div>
@@ -56,6 +44,8 @@ import footerbar from '@/components/footerbar.vue'
 import securityModule from 'assets/js/security'
 import router from '@/router'
 import NetUtils from 'assets/js/netUtils'
+import BaseUtils from 'assets/js/base'
+
 export default {
     name: 'Login',
     data: function () {
@@ -64,29 +54,44 @@ export default {
             password: "",
             isremember: false,
             verifycode: "",
-            antiforgetcode:""
+            image: "",
+            antiforgetcode: ""
         }
     },
     methods: {
         login: function (e) {
-            this.username = "asdasdasd";
-            this.password = "luhanlin1";
-            this.isremember = true;
-            this.verifycode = "";
-            NetUtils.ajax();
-            // router.push('Main')
+            var _this = this;
+            _this.username = "asdasdasd";
+            _this.password = "luhanlin1";
+            _this.isremember = true;
+            _this.verifycode = "";
+            var url = _this.$route.query.redirectUrl;
+            if (url==undefined) {
+                router.push('Main')
+            } else {
+                router.push(url)
+            }
+            // NetUtils.ajax("00000001", null, function (response) {
+            //     var url = _this.$route.query.redirectUrl;
+            //     if (url) {
+            //         router.push(url)
+            //     }
+            //     router.push('Main')
+            // }, "body");
         },
-        refresh:function (e) {
-            //NetUtils.ajax();
-            this.antiforgetcode="asdasd"
-            alert("asdasd");
+        refresh: function (e) {
+            var _this = this;
+            NetUtils.ajax("00000000", null, function (response) {
+                _this.antiforgetcode = response.antiForgetCode;
+                _this.image = response.image;
+            }, "#vcode-container");
         }
     },
     created: function (e) {
         var islogin = securityModule.checkLogin()
-        if(islogin){
-            // router.push('Main');
-        }else{
+        if (islogin) {
+            router.push('Main');
+        } else {
             this.refresh(e);
         }
     },

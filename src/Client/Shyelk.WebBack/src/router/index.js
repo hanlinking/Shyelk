@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Main from '@/components/Main'
 import securityModule from '../assets/js/security'
+import BaseUtils from '../assets/js/base'
 
 Vue.use(Router)
 
@@ -24,9 +25,9 @@ const router = new Router({
     }]
 })
 router.beforeEach((to, from, next) => {
-    console.log(to);
     if (to.name != 'Login' && !securityModule.checkLogin()) {
-        next('login');
+        var url = BaseUtils.StringFormat("login?redirectUrl={0}", to.path);
+        next(url);
     } else {
         next();
     }

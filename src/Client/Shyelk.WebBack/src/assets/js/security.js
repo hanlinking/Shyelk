@@ -9,5 +9,8 @@ export default {
     },
     signOut: function() {
         $.cookie('se_token', null, { path: '/' })
+    },
+    ShowLoginModal: function() {
+
     }
 }

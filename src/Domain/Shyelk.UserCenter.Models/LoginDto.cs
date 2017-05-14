@@ -11,5 +11,6 @@ namespace Shyelk.UserCenter.Models
         public string Password { get; set; }
         public string IsRemember { get; set; }
         public string VerifyCode { get; set; }
+        public string AntiForgetCode{get;set;}
     }
 }
